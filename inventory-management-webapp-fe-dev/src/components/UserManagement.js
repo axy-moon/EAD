@@ -1,0 +1,188 @@
+import React , {useReducer, useEffect , useState} from 'react';
+import { styled } from '@mui/material/styles';
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
+import Box from '@mui/material/Box';
+import Header from '../commonComponents/Header';
+import Sidebar from '../commonComponents/Sidebar';
+import Axios from 'axios';
+
+import { Tag } from 'primereact/tag';
+import "primereact/resources/primereact.min.css";
+import "primereact/resources/themes/lara-light-indigo/theme.css";     
+import "primeicons/primeicons.css";                                         
+
+// Data table
+//import userfile from './user.json';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import { Button } from 'bootstrap';
+
+const init = initialState => initialState;
+const reducer = (state, action) => {
+  switch (action.type) {
+    case "dataLoaded":
+      return { ...state, results: action.payload, loading: false };
+    default:
+      throw new Error();
+  }
+};
+var data;
+Axios({
+  method:"get",
+  url:"http://localhost:8000/fetchallUser",
+}).then((response)=>{
+  //console.log(response.data.result);
+  data=response.data.result;
+  console.log(data);
+})
+
+function mailSender() {
+  alert('You clicked me!');
+  // Axios({
+  //   method:"post",
+  //   url:"http://localhost:8000/sendmail",
+  //   data:{
+
+  //   }
+  // }).then((response)=>{
+  //   //console.log(response.data.result);
+  //   data=response.data.result;
+  //   console.log(data);
+  // })
+  //console.log(email);
+}
+function UserManagement() {
+        const [name, setName] = useState("");
+        const [email, setEmail] = useState("");
+        const [role, setRole] = useState("");
+
+        const initialState = {
+                results: [],
+                loading: true
+            };
+            const [state, dispatch] = useReducer(reducer, initialState, init);
+            const { results, loading } = state;
+
+            useEffect(() => {
+                if (loading) {
+                dispatch({ type: "dataLoaded", payload: data });
+                }
+            }, []);
+            
+            const statuses = ['Joined','Invite sent']
+
+            const getSeverity = (status) => {
+              switch(status) {
+                case 'Joined':
+                  return 'success';
+                case 'Invite sent':
+                  return 'warning';
+              }
+            }
+
+          const statusBodyTemplate = (rowData) => {
+            return <Tag value={rowData.status} severity={getSeverity(rowData.status)}/>
+          };
+
+          const statusItemTemplate = (option) => {
+            return <Tag value={option} severity={getSeverity(option)}/>;
+          };
+
+          const ellipsisAction = (rowData) => {
+            return <i className="pi pi-ellipsis-v" style={{fontSize: '1.5rem', color: '#8F8F8F'}} />
+          };
+
+          const handleSubmit = (e) => {
+            e.preventDefault()
+            console.log(name);
+            console.log(email);
+            console.log(role);
+            alert("User, " + name + " Registered Successfully!");
+            Axios({
+              method:"post",
+              url:"http://localhost:8000/addUser",
+              data:{
+                name:name,
+                username:email,
+                roles:role
+              }
+            }).then((response)=>{
+              console.log(response);
+              Axios({
+                  method:"post",
+                  url:"http://localhost:8000/sendmail",
+                  data:{
+                      username:email,
+                      choice:1
+                  }
+                })
+              
+            })
+          }
+
+  return (
+    <>
+    <Header/>
+    <div style={{'display':'flex'}}>
+    <Sidebar/>
+    <div className='um-container'>
+      <div className='user-management-grid'>
+        <div className='top-grid'>
+          <div className='top-grid-left'>
+          <p className='center-head'>Access Role Description</p>
+          <p>
+              <b>Admin</b><br/>
+              Account owner - who created this App account and has all permissions and can give access to other users. <br/><br/>
+              <b>Sales</b><br/>
+              The sales team of the company - has access to view, edit and add products, product combos customers and orders. They don’t have edit access 
+              on any of these modules. <br/><br/>
+              <b>Accounts</b><br/>   
+              The account team has access to only view the order and the dashboard
+              </p>
+          </div>
+            <form className="top-grid-right" onSubmit={handleSubmit} action="">
+                <h3>Invite Team</h3>      
+                   <div className='field'>
+                    <p>Name: </p>
+                    <input type='text' placeholder='Enter the name of team member' onInput={e=>setName(e.target.value)}/>
+                   </div>
+                   <div className='field'>
+                   <p>Email Address</p>
+                    <input type='text' id="email" placeholder='Enter the name of team member' onInput={e=>setEmail(e.target.value)} />
+                   </div>
+                   <div className='field'>
+                   <p>Role</p>
+                   <select name="role" onChange={e=>setRole(e.target.value)}>
+                           <option value="" hidden selected>Choose the role of the team member</option>
+                           <option value="admin">Admin</option>
+                           <option value="sales">Sales</option>
+                          <option value="accounts">Accounts</option>
+                       </select>
+                   </div>
+                   <input type="submit" value={"REGISTER"} className='userRegisterBtn'/>
+                   {/* <button onClick={mailSender} className='top-grid-right userRegisterBtn'>REGISTER</button> */}
+                </form>
+  
+        </div>
+        <div className='bottom-grid'>
+                    <div className='dataTable'>
+                      <p className='center-head'>Current Members</p>
+
+                       <DataTable value={results} showGridlines tableStyle={{ textAlign:'center' }}>
+                       <Column field="username" header="Name"></Column>
+                       <Column field="username" header="Email"></Column>
+                       <Column field="roles" header="Role"></Column>
+                       <Column field="statuses" header="Status" body={statusBodyTemplate}></Column>
+                       <Column header="" body={ellipsisAction}></Column>
+                       </DataTable>
+                   </div>
+        </div>
+      </div>
+      </div>
+      </div>
+      </>
+  );
+}
+
+export default UserManagement;
