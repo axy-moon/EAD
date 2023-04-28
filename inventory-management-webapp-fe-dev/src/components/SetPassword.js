@@ -8,46 +8,51 @@ import {useParams} from 'react-router-dom'
 
 //import constant from "./constant";
 
-//css
+
 import '../css/index.css';
-import '../css/login.css';;
+import '../css/login.css';
+
+var linkValidity;
 
 const SetPassword = () => {
 
-    //routing
     const param = useParams();
-    //console.log(param);
-    const id=param.id;
+
+    var id;
+    
     const token=param.token;
 
-    //const [linkValidity, setLinkValidity] = useState('not-valid');
     const [isReadOnly, setIsReadOnly] = useState(false)
 
     function check(){
-        if(linkValidity)
-        { 
-            //alert("hii ");
+
+        if(linkValidity=="No user found"){
+            alert("No user found");
+            setIsReadOnly(true);
+        }
+        else if(linkValidity=="Already Set your password"){
+              alert("Already Set your password");
+              setIsReadOnly(true);
+        }
+        else if(linkValidity=="Link Expired"){
+            alert("Link Expired");
+            setIsReadOnly(true);
+        } 
+        else{
             setIsReadOnly(false);
         }
-        else
-        {
-            alert(linkValidity);
-            alert("The link has been expired. Try contacting the admin for further processing.");
-            setIsReadOnly(true);
 
-        }
     }
-    var linkValidity = "";
+    
     useEffect(() => {
         Axios({
             method:"post",
-            url:"http://localhost:8000/verify",
+            url:"http://localhost:8000/verifyuser",
             data:{
-                id:id,
                 token:token
             }
         }).then((response)=>{
-            console.log(response);
+            console.log(response.data);
             linkValidity=response.data;
             console.log('data is',linkValidity);
             check();
@@ -70,18 +75,20 @@ const SetPassword = () => {
             setError(true);
         else if(!password1.match(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,}$/)) 
             setError2(true); 
-        else
+        else{
+            console.log(linkValidity);
         Axios({
             method:"patch",
             url:"http://localhost:8000/updateUser",
             data:{
-                _id:id,
+                _id:linkValidity,
                 Password:password1
             }
         }).then((response)=>{
             console.log(response);
             navigate("/Login");
         })
+    }
     }
 
   return(

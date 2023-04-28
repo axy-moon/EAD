@@ -3,7 +3,8 @@ const Schema=require('../models/userSchema');
 const bcrypt=require('bcrypt');
 
 const verifyUser=async(req,res)=>{
-    const User=await Schema.findOne(req.body.username);
+    console.log(req.body)
+    const User=await Schema.findOne({username:req.body.username});
     if(!User){
         console.log(user);
         res.json({
@@ -11,9 +12,7 @@ const verifyUser=async(req,res)=>{
         })
     }
     else{
-        res.json({
-            data:"Successfull"
-        })
+        res.send("Verified")
     }
 }
 

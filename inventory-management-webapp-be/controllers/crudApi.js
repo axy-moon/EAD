@@ -5,19 +5,21 @@ const jwt=require('jsonwebtoken')
 const addUser=async(req,res)=>{
     try{
         const data=new schema(req.body);
-        const result=await data.save();
-        if(!result){
-            res.json({
-                status:"Failed",
-                message:"Not able to add User Detail"
-            })
+        const user=await schema.findOne({username:req.body.username})
+        if(!user){
+            const result=await data.save();
+            if(result=="null"){
+                res.json({
+                    status:"Failed",
+                    message:"Not able to add User Detail"
+                })
+            }
+            else{
+                res.send("Registered Successfully!")
+            }
         }
         else{
-            res.json({
-                status:"Success",
-                message:"Successfully added User Detail"
-            })
-
+            res.send("Already registered")
         }
     }catch(e){
         console.log(e);

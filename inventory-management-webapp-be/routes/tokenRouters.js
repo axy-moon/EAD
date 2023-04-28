@@ -6,7 +6,7 @@ const schema=require('../models/userSchema');
 const router=express.Router();
 const jwt=require('jsonwebtoken');
 
-router.get('/posts',authenticateToken,postApi);
-router.post('/verify',verifyUser);
+//router.get('/verifyToken',authenticateToken,postApi);
+router.post('/verifyuser',verifyUser);
 
 module.exports=router;

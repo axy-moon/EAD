@@ -19,16 +19,31 @@ export default function SendEmail() {
 
         e.preventDefault()
         console.log(email);
-        localStorage.setItem('user_email',email);
-        await Axios({
+        Axios({
             method:"post",
-            url:"http://localhost:8000/sendmail",
+            url:"http://localhost:8000/userverify",
             data:{
                 username:email,
-                choice:2
+            }
+
+        }).then((response)=>{
+            if(response.data=="Verified"){
+                localStorage.setItem('user_email',email);
+                Axios({
+                    method:"post",
+                    url:"http://localhost:8000/sendmail",
+                    data:{
+                        username:email,
+                        choice:2
+                    }
+                })
+                navigate("/Reset");
+            }
+            else{
+                alert("Kindly Check your credentials");
             }
         })
-        navigate("/Reset");
+        
     }
   return (
     <div className="loginFormContainer">

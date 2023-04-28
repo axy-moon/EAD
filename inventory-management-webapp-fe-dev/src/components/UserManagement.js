@@ -1,4 +1,8 @@
 import React , {useReducer, useEffect , useState} from 'react';
+import { styled } from '@mui/material/styles';
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
+import Box from '@mui/material/Box';
 import Header from '../commonComponents/Header';
 import Sidebar from '../commonComponents/Sidebar';
 import Axios from 'axios';
@@ -12,6 +16,7 @@ import "primeicons/primeicons.css";
 //import userfile from './user.json';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
+import { Button } from 'bootstrap';
 
 const init = initialState => initialState;
 const reducer = (state, action) => {
@@ -22,7 +27,6 @@ const reducer = (state, action) => {
       throw new Error();
   }
 };
-
 var data;
 Axios({
   method:"get",
@@ -33,6 +37,21 @@ Axios({
   console.log(data);
 })
 
+function mailSender() {
+  alert('You clicked me!');
+  // Axios({
+  //   method:"post",
+  //   url:"http://localhost:8000/sendmail",
+  //   data:{
+
+  //   }
+  // }).then((response)=>{
+  //   //console.log(response.data.result);
+  //   data=response.data.result;
+  //   console.log(data);
+  // })
+  //console.log(email);
+}
 function UserManagement() {
         const [name, setName] = useState("");
         const [email, setEmail] = useState("");
@@ -51,20 +70,23 @@ function UserManagement() {
                 }
             }, []);
             
+            const statuses = ['Joined','Invite sent']
 
             const getSeverity = (status) => {
               switch(status) {
-                case 'active':
+                case 'Joined':
                   return 'success';
-                case 'Pending':
+                case 'Invite sent':
                   return 'warning';
-                default:
-                  return 'default';
               }
             }
 
           const statusBodyTemplate = (rowData) => {
             return <Tag value={rowData.status} severity={getSeverity(rowData.status)}/>
+          };
+
+          const statusItemTemplate = (option) => {
+            return <Tag value={option} severity={getSeverity(option)}/>;
           };
 
           const ellipsisAction = (rowData) => {
@@ -76,18 +98,18 @@ function UserManagement() {
             console.log(name);
             console.log(email);
             console.log(role);
-            alert("User, " + name + " Registered Successfully!");
+            
             Axios({
               method:"post",
               url:"http://localhost:8000/addUser",
               data:{
-                name:name,
                 username:email,
                 roles:role
               }
             }).then((response)=>{
-              console.log(response);
-              Axios({
+              alert("User, " + name+" "+ response.data);
+              if (response.data=="Registered Successfully!"){
+                Axios({
                   method:"post",
                   url:"http://localhost:8000/sendmail",
                   data:{
@@ -95,6 +117,8 @@ function UserManagement() {
                       choice:1
                   }
                 })
+              }
+              
               
             })
           }
@@ -147,7 +171,7 @@ function UserManagement() {
                     <div className='dataTable'>
                       <p className='center-head'>Current Members</p>
 
-                       <DataTable value={results}scrollable scrollHeight="240px" showGridlines tableStyle={{ textAlign:'center' }}>
+                       <DataTable value={results} showGridlines tableStyle={{ textAlign:'center' }}>
                        <Column field="username" header="Name"></Column>
                        <Column field="username" header="Email"></Column>
                        <Column field="roles" header="Role"></Column>

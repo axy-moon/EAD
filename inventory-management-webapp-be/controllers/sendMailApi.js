@@ -25,12 +25,13 @@ const sendMail=async(req,res)=>{
         }
 
         if(choice==1){
-            const secret = process.env.ACCESS_TOKEN_SECRET+olduser.Password;
-            const token=jwt.sign({email:olduser.username,id:olduser._id},secret,{
-                expiresIn:"1m",
+            const secret = process.env.ACCESS_TOKEN_SECRET;
+            const token=jwt.sign({username:olduser.username,_id:olduser._id},secret,{
+              expiresIn:"1m"
             })
-            content=`http://localhost:3000/SetPassword/${olduser._id}/${token}`;
+            content=`http://localhost:3000/SetPassword/${token}`;
             console.log(content);
+            
         }
 
         if(choice== 2 ){
@@ -42,9 +43,20 @@ const sendMail=async(req,res)=>{
               }
               else{
                  
-                 const result=async()=>{
-                  const otp=new Otp({username:olduser.username,otp:hash});
-                  const res= await otp.save()
+                  const result=async()=>{
+                  const user=await Otp.findOne({username:olduser.username});
+                  console.log("user in otp",user);
+                  if(user){
+                    console.log("usr exist in otp");
+                    var myQuery={_id:user._id};
+                    var query1={$set:{otp:hash,createAt : "$$NOW" } };
+                    const result2=async()=>{const res=await schema.updateOne(myQuery,query1)};
+                    result2();
+                  }
+                  else{
+                    const otp=new Otp({username:olduser.username,otp:hash});
+                    const res= await otp.save()
+                  }
                 };
                  result();
                  if(result){
