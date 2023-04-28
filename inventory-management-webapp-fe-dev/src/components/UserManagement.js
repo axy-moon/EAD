@@ -1,8 +1,4 @@
 import React , {useReducer, useEffect , useState} from 'react';
-import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
-import Box from '@mui/material/Box';
 import Header from '../commonComponents/Header';
 import Sidebar from '../commonComponents/Sidebar';
 import Axios from 'axios';
@@ -16,7 +12,6 @@ import "primeicons/primeicons.css";
 //import userfile from './user.json';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-import { Button } from 'bootstrap';
 
 const init = initialState => initialState;
 const reducer = (state, action) => {
@@ -74,9 +69,9 @@ function UserManagement() {
 
             const getSeverity = (status) => {
               switch(status) {
-                case 'Joined':
+                case 'active':
                   return 'success';
-                case 'Invite sent':
+                case 'Pending':
                   return 'warning';
               }
             }
@@ -171,7 +166,7 @@ function UserManagement() {
                     <div className='dataTable'>
                       <p className='center-head'>Current Members</p>
 
-                       <DataTable value={results} showGridlines tableStyle={{ textAlign:'center' }}>
+                       <DataTable value={results} scrollable scrollHeight="240px" showGridlines tableStyle={{ textAlign:'center' }}>
                        <Column field="username" header="Name"></Column>
                        <Column field="username" header="Email"></Column>
                        <Column field="roles" header="Role"></Column>
