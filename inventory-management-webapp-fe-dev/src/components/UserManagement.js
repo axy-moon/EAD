@@ -32,21 +32,7 @@ Axios({
   console.log(data);
 })
 
-function mailSender() {
-  alert('You clicked me!');
-  // Axios({
-  //   method:"post",
-  //   url:"http://localhost:8000/sendmail",
-  //   data:{
 
-  //   }
-  // }).then((response)=>{
-  //   //console.log(response.data.result);
-  //   data=response.data.result;
-  //   console.log(data);
-  // })
-  //console.log(email);
-}
 function UserManagement() {
         const [name, setName] = useState("");
         const [email, setEmail] = useState("");
@@ -63,9 +49,8 @@ function UserManagement() {
                 if (loading) {
                 dispatch({ type: "dataLoaded", payload: data });
                 }
-            }, []);
+            }, [loading]);
             
-            const statuses = ['Joined','Invite sent']
 
             const getSeverity = (status) => {
               switch(status) {
@@ -73,6 +58,8 @@ function UserManagement() {
                   return 'success';
                 case 'Pending':
                   return 'warning';
+                default:
+                  return 'default';
               }
             }
 
@@ -80,10 +67,7 @@ function UserManagement() {
             return <Tag value={rowData.status} severity={getSeverity(rowData.status)}/>
           };
 
-          const statusItemTemplate = (option) => {
-            return <Tag value={option} severity={getSeverity(option)}/>;
-          };
-
+       
           const ellipsisAction = (rowData) => {
             return <i className="pi pi-ellipsis-v" style={{fontSize: '1.5rem', color: '#8F8F8F'}} />
           };
@@ -103,7 +87,7 @@ function UserManagement() {
               }
             }).then((response)=>{
               alert("User, " + name+" "+ response.data);
-              if (response.data=="Registered Successfully!"){
+              if (response.data==="Registered Successfully!"){
                 Axios({
                   method:"post",
                   url:"http://localhost:8000/sendmail",
@@ -123,7 +107,7 @@ function UserManagement() {
     <Header/>
     <div style={{'display':'flex'}}>
     <Sidebar/>
-    <div className='um-container'>
+    <div className='container'>
       <div className='user-management-grid'>
         <div className='top-grid'>
           <div className='top-grid-left'>

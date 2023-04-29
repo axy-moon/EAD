@@ -8,6 +8,8 @@ import Login from "./components/login";
 import SendEmail from "./components/SendEmail";
 import SendOTP from "./components/SendOTP";
 import ResetPassword from './components/ResetPassword';
+import Products from './components/Products';
+
 
 import UserManagement from './components/UserManagement'
 
@@ -22,6 +24,8 @@ function App() {
         <Route path="/Reset" element={<SendOTP/>}/>
         <Route path="/ResetPassword" element={<ResetPassword/>}/>
         <Route path="/userManagement" element={<UserManagement/>}/>
+        <Route path="/Products" element={<Products/>}/>
+
         </Routes>
     </div>
   );
