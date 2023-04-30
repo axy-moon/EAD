@@ -8,10 +8,13 @@ import Login from "./components/login";
 import SendEmail from "./components/SendEmail";
 import SendOTP from "./components/SendOTP";
 import ResetPassword from './components/ResetPassword';
-import Products from './components/Products';
-
 
 import UserManagement from './components/UserManagement'
+
+import Product from './components/productModule/Products'
+import Order from './components/orderModule/Order'
+import AddProduct from './components/productModule/AddProduct'
+
 
 function App() {
   return (
@@ -23,11 +26,21 @@ function App() {
         <Route path="/SendEmail" element={<SendEmail/>}/>
         <Route path="/Reset" element={<SendOTP/>}/>
         <Route path="/ResetPassword" element={<ResetPassword/>}/>
-        <Route path="/userManagement" element={<UserManagement/>}/>
-        <Route path="/Products" element={<Products/>}/>
+        <Route path="/UserManagement" element={<UserManagement/>}/>
 
+        <Route path="/Product" element={<Product/>}/>
+        <Route path="/Order" element={<Order/>}/>
+        <Route path="/AddProduct" element={<AddProduct/>}/>
         </Routes>
     </div>
   );
 }
 export default App;
+
+
+
+
+
+
+
+
