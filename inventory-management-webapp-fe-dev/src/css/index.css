@@ -2,6 +2,7 @@
 
 :root {
     --grid-bg: rgba(143, 143, 143, 0.35);
+    --hover: #fff;
 }
 
 * {
@@ -105,7 +106,7 @@ i {
     margin: 75px 0 0 100px;
 }
 
-.user-management-grid {
+.grid-layout {
     display: grid;
     grid-template-rows: 1fr 1fr;
     grid-gap: 5px;
@@ -180,6 +181,54 @@ select {
     border: none;
     width: 170px;
     border-radius: 5px;
+}
+
+.ps-grid-top {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    width: 92vw;    
+}
+
+.ps-grid-left , .ps-grid-center , .ps-grid-right{
+    background-color: #E8F3F1;
+    border-radius: 20px;
+    box-shadow: #101540;
+    margin: 10px;
+    text-align: center;
+    padding-top: 20px;
+}
+
+.ps-grid-right {
+    display: flex;
+    flex-direction: column;
+}
+.ps-buttons {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 100%;
+}   
+
+.ps-buttons button {
+    width: 60px;
+    height: 60px;
+    border: none;
+    background-color: #0DD3AD;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.ps-buttons span {
+    font-size: 36px;
+}
+
+.ps-buttons p {
+    padding: 10px;
+}
+
+
+
+.ps-grid-bottom {
+    background-color: var(--grid-bg);
 }
 
 @media only screen and (max-width: 1200px) {

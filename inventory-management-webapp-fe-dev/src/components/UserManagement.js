@@ -108,7 +108,7 @@ function UserManagement() {
     <div style={{'display':'flex'}}>
     <Sidebar/>
     <div className='container'>
-      <div className='user-management-grid'>
+      <div className='grid-layout'>
         <div className='top-grid'>
           <div className='top-grid-left'>
           <p className='center-head'>Access Role Description</p>
@@ -135,7 +135,7 @@ function UserManagement() {
                    <div className='field'>
                    <p>Role</p>
                    <select name="role" onChange={e=>setRole(e.target.value)}>
-                           <option value="" hidden selected>Choose the role of the team member</option>
+                           <option value="" hidden selected >Choose the role of the team member</option>
                            <option value="admin">Admin</option>
                            <option value="sales">Sales</option>
                           <option value="accounts">Accounts</option>

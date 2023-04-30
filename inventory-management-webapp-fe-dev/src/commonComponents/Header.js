@@ -4,7 +4,7 @@ import '../css/index.css';
 import logo from '../images/Ellipse.png';
 import user from '../images/user.svg';
 
-const Header = () => {
+const Header = (props) => {
     return(
         <div className="header">
             <div className="header-logo">
@@ -17,7 +17,7 @@ const Header = () => {
                 </div>
                 <div className="user-section">
                     <img src={user} className="avatar" alt="logo"/>
-                    <span>Ann Lee</span>
+                    <span>{props.name}</span>
                     <i className="pi pi-sort-down"></i>
                 </div>
             </div>
