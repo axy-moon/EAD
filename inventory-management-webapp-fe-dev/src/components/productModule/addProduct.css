@@ -97,4 +97,15 @@ textarea {
     .container-addProduct form .right-addProduct {
         width: 100%;
     }
+
+    .container-addProduct .right-addProduct .row {
+        flex-direction: column;
+    }
+
+
+    .container-addProduct .right-addProduct .row .col25,
+    .container-addProduct .right-addProduct .row .col75,
+    .container-addProduct .right-addProduct .row .col50 {
+        width: 100%;
+    }
 }

@@ -475,6 +475,15 @@ const AddProduct = () => {
             </div>
         }
 
+          <div className="row">
+              <div className="col50">
+               <input type="button" className="addProduct-btns" name="cancel" value="CANCEL" />
+            </div>
+            <div className="col50">
+              <input type="submit" className="addProduct-btns" value="SUBMIT" />
+            </div>
+            </div>
+
         </div>  
         }
 
