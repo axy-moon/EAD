@@ -10,8 +10,7 @@ import SendOTP from "./components/SendOTP";
 import ResetPassword from './components/ResetPassword';
 
 import UserManagement from './components/UserManagement'
-
-import Product from './components/productModule/Products'
+import Products from './components/Products';
 import Order from './components/orderModule/Order'
 import AddProduct from './components/productModule/AddProduct'
 
@@ -28,7 +27,7 @@ function App() {
         <Route path="/ResetPassword" element={<ResetPassword/>}/>
         <Route path="/UserManagement" element={<UserManagement/>}/>
 
-        <Route path="/Product" element={<Product/>}/>
+        <Route path="/Product" element={<Products/>}/>
         <Route path="/Order" element={<Order/>}/>
         <Route path="/AddProduct" element={<AddProduct/>}/>
         </Routes>

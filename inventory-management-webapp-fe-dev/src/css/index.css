@@ -198,6 +198,11 @@ select {
     padding-top: 20px;
 }
 
+.ps-grid-left span {
+    font-size: 80px;
+    font-weight: 500;
+}
+
 .ps-grid-right {
     display: flex;
     flex-direction: column;
