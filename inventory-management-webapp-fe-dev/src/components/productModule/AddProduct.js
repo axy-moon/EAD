@@ -204,10 +204,10 @@ const AddProduct = () => {
         }
             <div className="row">
               <div className="col50">
-               <input type="button" className="addProduct-btns" name="cancel" value="Cancel" />
+               <input type="button" className="addProduct-btns" name="cancel" value="CANCEL" />
             </div>
             <div className="col50">
-              <input type="submit" className="addProduct-btns" />
+              <input type="submit" className="addProduct-btns" value="SUBMIT" />
             </div>
             </div>
         </div> 
@@ -278,6 +278,15 @@ const AddProduct = () => {
           <div className="groupCat1">
 <h3>Category 1</h3>
            
+          <div className="row">
+            <div className="col25">
+              <label htmlFor="catImage">Upload Image</label>
+            </div>
+            <div className="col75">
+              <input type="file" name="catImage" />
+            </div>
+          </div>
+
                       <div className="row">
             <div className="col25">
               <label htmlFor="purchaseCost">Purchase Cost</label>
@@ -314,56 +323,15 @@ const AddProduct = () => {
             </div>
           </div>
 
-          <div className="row">
-            <div className="col25">
-              <label htmlFor="salesType">Sales Type</label>
-            </div>
-            <div className="col75 salesType">
-              <div className="stype">
-                <input type="checkbox" id="rent" name="rent" onInput={handleSalesType} />
-              <label htmlFor="rent">Rent</label>
-              </div>
-              <div className="stype">
-                <input type="checkbox" id="sales" name="sales" onInput={handleSalesType} />
-              <label htmlFor="sales">Sales</label>
-              </div>
-            </div>
-          </div>
-
-        { rentCheckbox && 
-          <div className="row">
-              <div className="col25">
-               <label htmlFor="depositAmount">Deposite Amount</label>
-
-            </div>
-            <div className="col75">
-              <input type="text" id="depositAmount" name="depositAmount"/>
-            </div>
-            </div>
-        }
-
-        
-        {salesCheckbox && 
-            <div className="row">
-              <div className="col25">
-               <label htmlFor="salesPrice">Sales Price</label>
-
-            </div>
-            <div className="col75">
-              <input type="text" id="salesPrice" name="salesPrice"/>
-            </div>
-            </div>
-        }
-          
-
             <div className="row">
               <div className="col50">
-               <input type="button" className="addProduct-btns" name="cancel" value="Cancel" />
+               <input type="button" className="addProduct-btns addCategory-btns" name="Discard" value="DISCARD" />
             </div>
             <div className="col50">
-              <input type="submit" className="addProduct-btns" />
+              <input type="button" className="addProduct-btns addCategory-btns" name="Add" value="ADD" />
             </div>
             </div>
+
         </div> 
 
         }
@@ -374,6 +342,16 @@ const AddProduct = () => {
 
           <div className="groupCat2">
 <h3>Category 2</h3>
+
+
+          <div className="row">
+            <div className="col25">
+              <label htmlFor="catImage">Upload Image</label>
+            </div>
+            <div className="col75">
+              <input type="file" name="catImage" />
+            </div>
+          </div>
            
                       <div className="row">
             <div className="col25">
@@ -411,6 +389,51 @@ const AddProduct = () => {
             </div>
           </div>
 
+           <div className="row">
+              <div className="col50">
+               <input type="button" className="addProduct-btns addCategory-btns" name="Discard" value="DISCARD" />
+            </div>
+            <div className="col50">
+              <input type="button" className="addProduct-btns addCategory-btns" name="Add" value="ADD" />
+            </div>
+            </div>
+        </div> 
+        }
+
+        <h3>Grouped Items</h3>
+          <div className="row">
+            <div className="col25">
+              <label htmlFor="groupId">Group Id</label>
+            </div>
+            <div className="col75">
+              <input type="text" id="groupId" name="groupId" disabled value="101"/>
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col25">
+              <label htmlFor="gitems">Items</label>
+            </div>
+            <div className="col75">
+              <ul>
+                <li>Item1</li>
+                <li>Item2</li>
+                <li>Item3</li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col25">
+              <label htmlFor="groupedCost">Grouped Cost</label>
+            </div>
+            <div className="col75">
+              <input type="text" id="groupedCost" name="groupedCost" disabled value="Rs. 7000"/>
+            </div>
+          </div>
+
+
+
           <div className="row">
             <div className="col25">
               <label htmlFor="salesType">Sales Type</label>
@@ -451,20 +474,6 @@ const AddProduct = () => {
             </div>
             </div>
         }
-          
-
-            <div className="row">
-              <div className="col50">
-               <input type="button" className="addProduct-btns" name="cancel" value="Cancel" />
-            </div>
-            <div className="col50">
-              <input type="submit" className="addProduct-btns" />
-            </div>
-            </div>
-        </div> 
-
-        }
-
 
         </div>  
         }
