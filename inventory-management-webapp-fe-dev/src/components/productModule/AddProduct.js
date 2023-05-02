@@ -1,6 +1,8 @@
 import React,{useState} from 'react'
 import './addProduct.css'
 
+import Header  from '../../commonComponents/Header'
+import Sidebar from '../../commonComponents/Sidebar'
 const AddProduct = () => {
 
   const [rentCheckbox,setRentCheckbox] = useState(false)
@@ -73,13 +75,12 @@ const AddProduct = () => {
 
   return (
     <>
+       <Header/>
+        <div style={{'display' : 'flex'}}>
+            <Sidebar/>
       <div className="container-addProduct">
         <form action="">
-          <div className="left-addProduct">
-                <p><input type="file"  accept="image/*" name="image" id="file" onChange={handleUploadImage}/></p>
-                <p><label htmlFor="file">Upload Image</label></p>
-                <p><img id="output" width="200" style={{background:"blue"}}/></p>
-          </div>
+          
 
         { singleItemForm &&
         <div className="right-addProduct">
@@ -152,7 +153,7 @@ const AddProduct = () => {
               <input type="text" id="totalCost" name="totalCost" disabled value="Rs. 3000"/>
             </div>
           </div>
-
+          
           <div className="row">
             <div className="col25">
               <label htmlFor="notes">Notes</label>
@@ -177,6 +178,7 @@ const AddProduct = () => {
               </div>
             </div>
           </div>
+          
 
         { rentCheckbox && 
           <div className="row">
@@ -212,6 +214,11 @@ const AddProduct = () => {
             </div>
         </div> 
         }
+        <div className="image-upload">
+                <p><input type="file"  accept="image/*" name="image" id="file" onChange={handleUploadImage}/></p>
+                <p><label htmlFor="file">Upload Image</label></p>
+                <p><img id="output" width="200" style={{background:"blue"}}/></p>
+          </div>  
 
 {/* ------------GROUP ITEMS ------------- */}
 
@@ -494,6 +501,8 @@ const AddProduct = () => {
 
         </form>
         </div>
+        </div>
+
     </>
   )
 }

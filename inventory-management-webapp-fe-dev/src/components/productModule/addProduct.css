@@ -3,12 +3,15 @@
     align-items: center;
     justify-content: space-evenly;
     min-height: 100vh;
-    background-color: rgb(105, 231, 193);
+    padding: 5px;
+    margin: 75px 0 0 100px;
+    background-color:rgba(143, 143, 143, 0.35);
+    width: 91vw;
 }
 
 .container-addProduct form .left-addProduct {
     width: 30%;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
 }
 

@@ -25,7 +25,7 @@
     position: fixed;
     z-index: 1;
 }
-
+    
 .header-elements {
     display: flex;
     justify-content: space-between;
@@ -189,13 +189,13 @@ select {
     width: 92vw;    
 }
 
-.ps-grid-left , .ps-grid-center , .ps-grid-right{
+.ps-grid-left , .ps-grid-center , .ps-grid-right , .ps-grid-bleft , .ps-grid-bright {
     background-color: #E8F3F1;
-    border-radius: 20px;
+    border-radius: 10px;
     box-shadow: #101540;
-    margin: 10px;
+    margin: 0 0 10px 10px;
     text-align: center;
-    padding-top: 20px;
+    padding-top: 15px;
 }
 
 .ps-grid-left span {
@@ -207,6 +207,7 @@ select {
     display: flex;
     flex-direction: column;
 }
+
 .ps-buttons {
     display: flex;
     justify-content: space-around;
@@ -218,10 +219,11 @@ select {
     width: 60px;
     height: 60px;
     border: none;
-    background-color: #0DD3AD;
     border-radius: 5px;
+    background-image: linear-gradient(to right, #68E4BC 0%, #4AD0D1 99%);
     cursor: pointer;
 }
+
 .ps-buttons span {
     font-size: 36px;
 }
@@ -230,11 +232,81 @@ select {
     padding: 10px;
 }
 
+.chart {
+    width: 50%;
+    margin: auto;
+    padding: 0;
 
+}
 
 .ps-grid-bottom {
-    background-color: var(--grid-bg);
+    display: grid;
+    grid-template-columns: 80% 20%;
+    background-color: #fff;
+    margin: 0;
 }
+
+.ps-grid-bleft{
+    display: flex;
+    flex-direction: column;
+    background-color: #E8F3F1;
+
+}
+
+.ps-dt-table {
+    display: grid;
+    place-items: center;
+    margin-top: 20px;
+}
+
+.ps-grid-bright {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.ps-grid-bright h2 {
+    padding-left: 30px;
+    padding-bottom: 10px;
+}
+
+.ps-grid-bright > div{
+    text-align: left;
+    padding-left: 30px;
+}
+
+.ps-grid-bright span {
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.ps-grid-bright p {
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+.ps-grid-bright .order-btn  {
+    width: 100%;
+    padding-left: 165px;
+}
+
+.ps-grid-bright .order-btn button {
+    height: 36px;
+    padding: 5px;
+    margin-bottom: 6px;
+    background-color: #2F58CD;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+}
+
+
+
+
+
+
+
+
 
 @media only screen and (max-width: 1200px) {
 
