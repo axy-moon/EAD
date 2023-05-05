@@ -50,12 +50,22 @@ const sendMail=async(req,res)=>{
                     console.log("usr exist in otp");
                     var myQuery={_id:user._id};
                     var query1={$set:{otp:hash,createAt : "$$NOW" } };
-                    const result2=async()=>{const res=await schema.updateOne(myQuery,query1)};
-                    result2();
+                    // const result2=async()=>{const res=await schema.updateOne(myQuery,query1)};
+                    // result2();
                   }
                   else{
                     const otp=new Otp({username:olduser.username,otp:hash});
-                    const res= await otp.save()
+                    const res= await otp.save();
+                    setTimeout(myFunc,15000,olduser.username);
+                  }
+                  function myFunc(arg){
+                    console.log(`${arg}`);
+                    query={username:`${arg}`};
+                    console.log("inside settime");
+                    var up_otp={$set:{otp:"Expired"} };
+                    const result=async()=>{const res=await Otp.updateOne(query,up_otp)};
+                    result();
+
                   }
                 };
                  result();
