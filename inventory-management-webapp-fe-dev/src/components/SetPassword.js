@@ -82,7 +82,7 @@ const SetPassword = () => {
             url:"http://localhost:8000/updateUser",
             data:{
                 _id:linkValidity,
-                Password:password1
+                password:password1
             }
         }).then((response)=>{
             console.log(response);

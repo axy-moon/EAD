@@ -5,7 +5,7 @@ const jwt=require('jsonwebtoken')
 const addUser=async(req,res)=>{
     try{
         const data=new schema(req.body);
-        const user=await schema.findOne({username:req.body.username})
+        const user=await schema.findOne({email:req.body.email})
         if(!user){
             const result=await data.save();
             if(result=="null"){
@@ -30,7 +30,7 @@ const updateUser=async(req,res)=>{
     
     try{        
     const user=req.body._id;
-    var pass=req.body.Password;
+    var pass=req.body.password;
 
     bcrypt.hash(pass,0,(err, hash)=>{
         if(err){
@@ -38,7 +38,7 @@ const updateUser=async(req,res)=>{
         }
         else{
             var myQuery={_id:user};
-            var query={$set:{_id:user,Password:hash}};
+            var query={$set:{_id:user,password:hash}};
             var query1={$set:{_id:user,status:"active"}};
             const result=async()=>{const res=await schema.updateOne(myQuery,query)};
             const result1=async()=>{const res=await schema.updateOne(myQuery,query1)};
@@ -63,18 +63,17 @@ const updateUser=async(req,res)=>{
 }
 
 const updateUserEmail=async(req,res)=>{
-    
     try{        
-    const user=req.body.username;
-    var pass=req.body.Password;
+    const user=req.body.email;
+    var pass=req.body.password;
 
     bcrypt.hash(pass,0,(err, hash)=>{
         if(err){
             next(err)
         }
         else{
-            var myQuery={username:user};
-            var query={$set:{username:user,Password:hash}};
+            var myQuery={email:user};
+            var query={$set:{email:user,password:hash}};
             const result=async()=>{const res=await schema.updateOne(myQuery,query)};
             result(); 
             if(result){
@@ -92,13 +91,11 @@ const updateUserEmail=async(req,res)=>{
     }catch(err){
         console.log(err);       
     }
-    
 }
-
 
 const deleteUser=async(req,res)=>{
     try{
-        const result=await schema.deleteOne({username:req.body.username});
+        const result=await schema.deleteOne({email:req.body.email});
         if(result){
             res.json({
                 message:"Deleted Successfully",
@@ -114,10 +111,9 @@ const deleteUser=async(req,res)=>{
     }
 }
 
-
 const fetchallUser=async(req,res)=>{
     try{
-        const result=await schema.find().select("-Password");
+        const result=await schema.find().select("-password");
         if(result){
             res.json({
                 result
@@ -135,7 +131,7 @@ const fetchallUser=async(req,res)=>{
 
 const fetchUser=async(req,res)=>{
     try{
-        const result=await schema.findOne({username:req.body.username}).select("-Password");
+        const result=await schema.findOne({email:req.body.email}).select("-password");
         if(result){
             res.json({
                 result
@@ -154,13 +150,14 @@ const fetchUser=async(req,res)=>{
 
 const login=async(req,res)=>{
     try{
-        const email=req.body.username;
+        const email=req.body.email;
         console.log(email);
-        const result=await schema.findOne({username:email});
+        console.log(req.body.password);
+        const result=await schema.findOne({email:email});
         console.log(result);
-        if(result && await bcrypt.compare(req.body.Password,result.Password) ){
+        if(result && await bcrypt.compare(req.body.password,result.password) ){
             console.log("inside login ")
-            const user={username:email};
+            const user={email:email,shopname:result.shopname};
             const accessToken=jwt.sign(user,process.env.ACCESS_TOKEN_SECRET);
             res.json({
                 data:accessToken
@@ -178,9 +175,23 @@ const login=async(req,res)=>{
     }
 }
 
-
-
-
+const fetchUsers=async(req,res)=>{
+    try{
+        const result=await schema.find({shopname:req.body.shopname}).select("-password");
+        if(result){
+            res.json({
+                result
+            })
+        }
+        else{
+            res.json({
+                message:"Failed to fetch data",
+            })
+        }    
+    }catch(e){
+        console.log(e);
+    }
+}
 
 module.exports={
     addUser,
@@ -188,6 +199,7 @@ module.exports={
     deleteUser,
     fetchallUser,
     fetchUser,
+    fetchUsers,
     login,
     updateUserEmail
 }

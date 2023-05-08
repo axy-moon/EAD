@@ -2,7 +2,7 @@ const express=require('express');
 const schema=require('../models/userSchema');
 const bcrypt=require('bcrypt');
 
-const {addUser,updateUser,deleteUser,fetchallUser,fetchUser,login,updateUserEmail}=require('../controllers/crudApi');
+const {addUser,updateUser,deleteUser,fetchallUser,fetchUser,fetchUsers,login,updateUserEmail}=require('../controllers/crudApi');
 const {sendMail}=require('../controllers/sendMailApi');
 
 const router=express.Router();
@@ -16,6 +16,8 @@ router.delete('/deleteUser',deleteUser);
 router.get('/fetchallUser',fetchallUser);
 
 router.post('/fetchUser',fetchUser);
+
+router.get('/fetchUsers',fetchUsers);
 
 router.post('/sendmail',sendMail);
 

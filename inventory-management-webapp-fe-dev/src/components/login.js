@@ -37,8 +37,8 @@ const Login = (props) => {
                 method:"post",
                 url:"http://localhost:8000/login",
                 data:{
-                    username:state.email,
-                    Password:state.password
+                    email:state.email,
+                    password:state.password
                 }
             }).then((response)=>{
                 const data=response.data.data;
@@ -49,6 +49,7 @@ const Login = (props) => {
                     console.log('inside login',response.data.data)
                     const token=response.data.data;
                     localStorage.setItem('token',token);
+                    //localStorage.setItem('email',email);
                     navigate("/userManagement");
                 }
             })        
