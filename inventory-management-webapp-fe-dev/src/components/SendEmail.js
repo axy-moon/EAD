@@ -8,10 +8,6 @@ import { useNavigate } from "react-router-dom";
 import '../css/index.css';
 import '../css/login.css';
 
-
-
-
-
 export default function SendEmail() {
     const navigate = useNavigate();
     const [email,setEmail] = useState('');
@@ -23,7 +19,7 @@ export default function SendEmail() {
             method:"post",
             url:"http://localhost:8000/userverify",
             data:{
-                username:email,
+                email:email,
             }
 
         }).then((response)=>{
@@ -33,14 +29,14 @@ export default function SendEmail() {
                     method:"post",
                     url:"http://localhost:8000/sendmail",
                     data:{
-                        username:email,
+                        email:email,
                         choice:2
                     }
                 })
                 navigate("/Reset");
             }
             else{
-                alert("Kindly Check your credentials");
+                alert("No Such user found");
             }
         })
         

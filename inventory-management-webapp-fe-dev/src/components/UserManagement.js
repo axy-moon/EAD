@@ -13,6 +13,8 @@ import "primeicons/primeicons.css";
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 
+var data;
+
 const init = initialState => initialState;
 const reducer = (state, action) => {
   switch (action.type) {
@@ -22,18 +24,23 @@ const reducer = (state, action) => {
       throw new Error();
   }
 };
-var data;
-Axios({
-  method:"get",
-  url:"http://localhost:8000/fetchallUser",
-}).then((response)=>{
-  //console.log(response.data.result);
-  data=response.data.result;
-  console.log(data);
-})
+
+//window.location.reload(true);
+
 
 
 function UserManagement() {
+        
+        Axios({
+          method:"get",
+          url:"http://localhost:8000/fetchallUser",
+        }).then((response)=>{
+          //console.log(response.data.result);
+          data=response.data.result;
+          console.log(data);
+        })
+
+        const [shopname, setShopName] = useState("");
         const [name, setName] = useState("");
         const [email, setEmail] = useState("");
         const [role, setRole] = useState("");
@@ -67,13 +74,13 @@ function UserManagement() {
             return <Tag value={rowData.status} severity={getSeverity(rowData.status)}/>
           };
 
-       
           const ellipsisAction = (rowData) => {
             return <i className="pi pi-ellipsis-v" style={{fontSize: '1.5rem', color: '#8F8F8F'}} />
           };
 
           const handleSubmit = (e) => {
-            e.preventDefault()
+            e.preventDefault();
+            console.log(shopname);
             console.log(name);
             console.log(email);
             console.log(role);
@@ -82,7 +89,9 @@ function UserManagement() {
               method:"post",
               url:"http://localhost:8000/addUser",
               data:{
-                username:email,
+                shopname:shopname,
+                name:name,
+                email:email,
                 roles:role
               }
             }).then((response)=>{
@@ -92,7 +101,7 @@ function UserManagement() {
                   method:"post",
                   url:"http://localhost:8000/sendmail",
                   data:{
-                      username:email,
+                      email:email,
                       choice:1
                   }
                 })
@@ -123,14 +132,18 @@ function UserManagement() {
               </p>
           </div>
             <form className="top-grid-right" onSubmit={handleSubmit} action="">
-                <h3>Invite Team</h3>      
+                <h3>Invite Team</h3>
                    <div className='field'>
-                    <p>Name: </p>
-                    <input type='text' placeholder='Enter the name of team member' onInput={e=>setName(e.target.value)}/>
+                    <p>Shop Name </p>
+                    <input type='text' placeholder='Enter the name of shop' onInput={e=>setShopName(e.target.value)}/>
+                   </div>    
+                   <div className='field'>
+                    <p>Name </p>
+                    <input type='text' placeholder='Enter the name of shop member' onInput={e=>setName(e.target.value)}/>
                    </div>
                    <div className='field'>
                    <p>Email Address</p>
-                    <input type='text' id="email" placeholder='Enter the name of team member' onInput={e=>setEmail(e.target.value)} />
+                    <input type='text' id="email" placeholder='Enter the email of shop member' onInput={e=>setEmail(e.target.value)} />
                    </div>
                    <div className='field'>
                    <p>Role</p>
@@ -151,8 +164,8 @@ function UserManagement() {
                       <p className='center-head'>Current Members</p>
 
                        <DataTable value={results} scrollable scrollHeight="240px" showGridlines tableStyle={{ textAlign:'center' }}>
-                       <Column field="username" header="Name"></Column>
-                       <Column field="username" header="Email"></Column>
+                       <Column field="name" header="Name"></Column>
+                       <Column field="email" header="Email"></Column>
                        <Column field="roles" header="Role"></Column>
                        <Column field="statuses" header="Status" body={statusBodyTemplate}></Column>
                        <Column header="" body={ellipsisAction}></Column>

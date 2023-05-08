@@ -5,18 +5,14 @@ const nodemailer=require("nodemailer");
 const Otp=require('../models/otpModel');
 const bcrypt=require('bcrypt');
 
-
-
 const sendMail=async(req,res)=>{
     try{
-
-
-        const email=req.body.username;
+        const email=req.body.email;
         console.log(email);
         const choice=req.body.choice;
         var content;
 
-        const olduser=await schema.findOne({username:email});
+        const olduser=await schema.findOne({email:email});
         console.log(olduser);
         if(!olduser){
           res.json({
@@ -26,7 +22,7 @@ const sendMail=async(req,res)=>{
 
         if(choice==1){
             const secret = process.env.ACCESS_TOKEN_SECRET;
-            const token=jwt.sign({username:olduser.username,_id:olduser._id},secret,{
+            const token=jwt.sign({email:olduser.email,_id:olduser._id},secret,{
               expiresIn:"1m"
             })
             content=`http://localhost:3000/SetPassword/${token}`;
@@ -44,23 +40,25 @@ const sendMail=async(req,res)=>{
               else{
                  
                   const result=async()=>{
-                  const user=await Otp.findOne({username:olduser.username});
+                  const user=await Otp.findOne({email:olduser.email});
                   console.log("user in otp",user);
                   if(user){
-                    console.log("usr exist in otp");
-                    var myQuery={_id:user._id};
-                    var query1={$set:{otp:hash,createAt : "$$NOW" } };
-                    // const result2=async()=>{const res=await schema.updateOne(myQuery,query1)};
-                    // result2();
+                    console.log("user exist in otp");
+                    const result=await Otp.deleteOne({email:olduser.email});
+                    if(result){
+                      const otp=new Otp({email:olduser.email,otp:hash});
+                      const res= await otp.save();
+                    }
+                    
                   }
                   else{
-                    const otp=new Otp({username:olduser.username,otp:hash});
+                    const otp=new Otp({email:olduser.email,otp:hash});
                     const res= await otp.save();
-                    setTimeout(myFunc,15000,olduser.username);
+                    //setTimeout(myFunc,15000,olduser.email);
                   }
                   function myFunc(arg){
                     console.log(`${arg}`);
-                    query={username:`${arg}`};
+                    query={email:`${arg}`};
                     console.log("inside settime");
                     var up_otp={$set:{otp:"Expired"} };
                     const result=async()=>{const res=await Otp.updateOne(query,up_otp)};

@@ -5,17 +5,28 @@ const postApi=async(req,res)=>{
     // const token=req.body.token;
     // console.log(token);
     // const verify=jwt.verify(token,process.env.ACCESS_TOKEN_SECRET);
-    // const result=await schema.findOne({username:verify.username}).select("-Password");
+    // const result=await schema.findOne({email:verify.email}).select("-password");
     return res.send(result._id);
-    //return res.json(result.filter(post=>post.username==req.body.token))
+    //return res.json(result.filter(post=>post.email==req.body.token))
 }
 
 /*const loginApi=async(req,res)=>{
-    const username=req.body.username;
-    const user={name:username};
+    const email=req.body.email;
+    const user={name:email};
     const accessToken=jwt.sign(user,process.env.ACCESS_TOKEN_SECRET);
     res.json({accessToken:accessToken})
 }*/
+const unhashToken=async(req,res)=>{
+    const token=req.body.token;
+    const details=jwt.verify(token,process.env.ACCESS_TOKEN_SECRET);
+    if(details){
+        res.json({
+            email:details.email,
+            shopname:details.shopname
+        })
+    }
+}
+
 
 
 const verifyUser=async(req,res)=>{
@@ -24,13 +35,13 @@ const verifyUser=async(req,res)=>{
     console.log("inside verify token",token);
     try{
         const check=jwt.verify(token,process.env.ACCESS_TOKEN_SECRET);
-        const result=await schema.findOne({username:check.username}).select("-Password");
+        const result=await schema.findOne({email:check.email}).select("-password");
         const olduser=await schema.findOne({_id:result.id});
         if(!olduser){
             return res.send("No user found")
         }
         if (olduser.status=="active"){
-            return res.send("Already Set your password");
+            return res.send("Already Set your Password");
         }
         
         return res.send(olduser._id);
@@ -41,4 +52,4 @@ const verifyUser=async(req,res)=>{
     
 }
 
-module.exports={postApi,verifyUser}   
+module.exports={postApi,verifyUser,unhashToken}   

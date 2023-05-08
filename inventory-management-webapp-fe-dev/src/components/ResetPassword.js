@@ -31,8 +31,8 @@ export default function ResetPassword() {
                 method:"patch",
                 url:"http://localhost:8000/updateUserEmail",
                 data:{
-                    username:email,
-                    Password:password1
+                    email:email,
+                    password:password1
                 }
             }).then((response)=>{
                 console.log(response);

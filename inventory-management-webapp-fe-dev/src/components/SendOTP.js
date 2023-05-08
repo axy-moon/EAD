@@ -25,7 +25,7 @@ const SendOTP = () => {
             method:"post",
             url:"http://localhost:8000/verifyotp",
             data:{
-                username:email,
+                email:email,
                 otp:otp
             }
         }).then((response)=>{

@@ -1,14 +1,20 @@
 const mongoose=require('mongoose');
 const bcrypt=require('bcrypt');
 const userSchema=new mongoose.Schema({
-    username:{
+    shopname:{
         type:String,
         required:true
     },
-    Password:
-    {
+    name:{
+        type:String,
+        required:true
+    },
+    email:{
+        type:String,
+        required:true
+    },
+    password:{
         type: String,
-        //required:true
     },
     roles:{
         type:String,
@@ -19,20 +25,4 @@ const userSchema=new mongoose.Schema({
         default:'Pending'
     }
 })
-
-/*userSchema.pre('save',function (next){
-    if(this.isModified('Password')){
-        bcrypt.hash(this.Password,0,(err, hash)=>{
-            if(err){
-                next(err)
-            }
-            else{
-                this.Password = hash;
-                console.log('from schema encryption',hash)
-                next();
-            }
-        })
-    }
-})*/ 
-
 module.exports=new mongoose.model('users',userSchema);

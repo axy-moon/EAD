@@ -4,9 +4,9 @@ const bcrypt=require('bcrypt');
 
 const verifyUser=async(req,res)=>{
     console.log(req.body)
-    const User=await Schema.findOne({username:req.body.username});
+    const User=await Schema.findOne({email:req.body.email});
     if(!User){
-        console.log(user);
+        console.log(User);
         res.json({
             data:"User not found"
         })
@@ -21,7 +21,7 @@ const verifyOtp=async(req,res)=>{
     try{
 
             
-            const User=await otpSchema.findOne({username:req.body.username});
+            const User=await otpSchema.findOne({email:req.body.email});
             
             if(User.length<=0){
                  throw new Error("Account doesn't exist");
@@ -29,7 +29,7 @@ const verifyOtp=async(req,res)=>{
             else{
                 const {Expired}=User;
                 if(Expired<Date.now()){
-                    await otpSchema.deleteMany({username:req.body.username});
+                    await otpSchema.deleteMany({email:req.body.email});
                     throw new Error("OTP Expired");
                 }
                 else{
@@ -41,7 +41,7 @@ const verifyOtp=async(req,res)=>{
                         res.json({
                             data:"valid"
                         })
-                        await otpSchema.deleteMany({username:req.body.username});
+                        await otpSchema.deleteMany({email:req.body.email});
                     }
                     else{
                         res.json({
@@ -60,5 +60,24 @@ const verifyOtp=async(req,res)=>{
      }
     
 }
+
+
+// const verifyOtp=async(req,res)=>{
+//         try{
+//             const User=await otpSchema.findOne({email:req.body.email});
+//             if (!User) {
+//                 return res.status(404).json({ data: 'User not found' });
+//               }
+            
+//               if (User.otp === otp) {
+//                 return res.status(200).json({ data: 'OTP verified successfully' });
+//               } else {
+//                 return res.status(401).json({ data: 'Incorrect OTP' });
+//               }
+//         }
+//         catch(er){
+
+//         }
+//     }
 
 module.exports={verifyUser,verifyOtp}
