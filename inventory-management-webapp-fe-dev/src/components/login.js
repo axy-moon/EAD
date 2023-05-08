@@ -13,6 +13,8 @@ const Login = (props) => {
         password:"",
     });
 
+    const[logCheck,setCheck] = useState(false);
+
     const [error,setError] = useState(false);
  
     const handleChange = (e) => {
@@ -41,7 +43,7 @@ const Login = (props) => {
             }).then((response)=>{
                 const data=response.data.data;
                 if(data=="false"){
-                    alert("Kindly check your credentials")
+                    setCheck(true);
                 }
                 else{
                     console.log('inside login',response.data.data)
@@ -77,6 +79,8 @@ const Login = (props) => {
                     <Button value='Login' id='CreateUserButton' />
                     {error?
                     <p className="login-alert">Please Enter email and password</p>:""}
+                    {logCheck?
+                    <p className="login-alert">Invalid Email or Password</p>:""}
                     </div>
                 </form>
             </div>

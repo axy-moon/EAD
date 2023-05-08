@@ -14,7 +14,7 @@ const SendOTP = () => {
     const [otp2,setOtp2] = useState('');
     const [otp3,setOtp3] = useState('');
     const [otp4,setOtp4] = useState('');
-
+    const [invalidOTP,setValid] = useState(false);
     const handleSubmit = async (e) => {
 
         e.preventDefault()
@@ -35,7 +35,7 @@ const SendOTP = () => {
                 navigate('/ResetPassword')
             }
             else{
-                alert(res)
+                setValid(true);
             }
         })
     }
@@ -58,8 +58,13 @@ const SendOTP = () => {
                     </div>
                     <p id="resend">Resend OTP</p>
                     <Button value='Continue' id='RPContinue' />
+                    {invalidOTP?
+                    <p className="login-alert" style={{"width":"50%"}}>Invalid OTP</p>:""}
+                    
                 </div>
+                
             </form>
+         
         </div>
         </div>
     );
