@@ -75,9 +75,6 @@ const AddProduct = () => {
 
   return (
     <>
-       <Header/>
-        <div style={{'display' : 'flex'}}>
-            <Sidebar/>
       <div className="container-addProduct">
         <form action="">
           
@@ -500,7 +497,6 @@ const AddProduct = () => {
 
 
         </form>
-        </div>
         </div>
 
     </>

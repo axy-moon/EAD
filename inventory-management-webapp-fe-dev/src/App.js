@@ -13,6 +13,8 @@ import UserManagement from './components/UserManagement'
 import Products from './components/Products';
 import Order from './components/orderModule/Order'
 import AddProduct from './components/productModule/AddProduct'
+import ViewProducts from './components/productModule/ViewProducts';
+import Layout from './commonComponents/Layout'
 
 
 function App() {
@@ -25,11 +27,17 @@ function App() {
         <Route path="/SendEmail" element={<SendEmail/>}/>
         <Route path="/Reset" element={<SendOTP/>}/>
         <Route path="/ResetPassword" element={<ResetPassword/>}/>
-        <Route path="/UserManagement" element={<UserManagement/>}/>
+       
+{/*         <Route path="/ViewProducts" element={<ViewProducts/>}/> */}
 
-        <Route path="/Product" element={<Products/>}/>
-        <Route path="/Order" element={<Order/>}/>
-        <Route path="/AddProduct" element={<AddProduct/>}/>
+        <Route element={<Layout />}>
+          <Route path="/UserManagement" element={<UserManagement/>}/>
+          <Route path="/Product" element={<Products/>}/>
+          <Route path="/Order" element={<Order/>}/>
+          <Route path="/AddProduct" element={<AddProduct/>}/>
+          <Route path="/ViewProducts" element={<ViewProducts/>} />
+          <Route path="/AddProduct" element={<AddProduct/>}/>
+        </Route>
         </Routes>
     </div>
   );

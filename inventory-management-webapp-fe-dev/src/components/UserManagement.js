@@ -1,12 +1,16 @@
-import React , {useReducer, useEffect , useState} from 'react';
+import React , {useReducer, useEffect , useState, useRef} from 'react';
 import Header from '../commonComponents/Header';
 import Sidebar from '../commonComponents/Sidebar';
 import Axios from 'axios';
+import { OverlayPanel } from 'primereact/overlaypanel';
+
 
 import { Tag } from 'primereact/tag';
 import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/lara-light-indigo/theme.css";     
-import "primeicons/primeicons.css";                                         
+import "primeicons/primeicons.css";             
+import { Messages } from 'primereact/messages';
+
 
 // Data table
 //import userfile from './user.json';
@@ -74,9 +78,20 @@ function UserManagement() {
             return <Tag value={rowData.status} severity={getSeverity(rowData.status)}/>
           };
 
+
           const ellipsisAction = (rowData) => {
             return <i className="pi pi-ellipsis-v" style={{fontSize: '1.5rem', color: '#8F8F8F'}} />
           };
+
+          const msgs = useRef(null);
+
+          const addMessages = () => {
+              msgs.current.show([
+                  { severity: 'success', summary: '', detail: 'User Registered Successfully', sticky: true, closable: true }
+              ]);
+          };
+      
+
 
           const handleSubmit = (e) => {
             e.preventDefault();
@@ -113,10 +128,6 @@ function UserManagement() {
 
   return (
     <>
-    <Header/>
-    <div style={{'display':'flex'}}>
-    <Sidebar/>
-    <div className='container'>
       <div className='grid-layout'>
         <div className='top-grid'>
           <div className='top-grid-left'>
@@ -132,6 +143,7 @@ function UserManagement() {
               </p>
           </div>
             <form className="top-grid-right" onSubmit={handleSubmit} action="">
+            <Messages ref={msgs} />
                 <h3>Invite Team</h3>
                    <div className='field'>
                     <p>Shop Name </p>
@@ -154,7 +166,7 @@ function UserManagement() {
                           <option value="accounts">Accounts</option>
                        </select>
                    </div>
-                   <input type="submit" value={"REGISTER"} className='userRegisterBtn'/>
+                   <input type="submit" onClick={addMessages} value={"REGISTER"} className='userRegisterBtn'/>
                    {/* <button onClick={mailSender} className='top-grid-right userRegisterBtn'>REGISTER</button> */}
                 </form>
   
@@ -172,8 +184,6 @@ function UserManagement() {
                        </DataTable>
                    </div>
         </div>
-      </div>
-      </div>
       </div>
       </>
   );

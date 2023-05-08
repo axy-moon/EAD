@@ -91,13 +91,18 @@ i {
     margin-bottom: 6px;
 }
 
-.side-links img {
-    color: #fff;
-}
-
 .side-links p {
     font-size: 12px;
     text-align: center;
+}
+
+.sidebar > * {
+    text-decoration: none;
+    color: #000;
+}
+
+.active {
+    color: #fff;
 }
 
 .container {

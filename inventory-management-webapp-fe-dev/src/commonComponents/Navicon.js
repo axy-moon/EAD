@@ -12,7 +12,7 @@ const Navicon = (props) => {
     }
 
     return(
-        <div className="side-links" onClick={handleClick} style={{ color: active ? "white" : "black"}}>
+        <div className="side-links">
             {/* <span onClick={handleClick} style={{ color: active ? "white" : "black" }} class="material-symbols-outlined">team_dashboard</span> */}
            <DashboardCustomizeIcon/>
                 <p>{props.name}</p>
