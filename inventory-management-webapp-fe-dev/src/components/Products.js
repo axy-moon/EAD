@@ -1,8 +1,10 @@
 import React from "react";
-import {useReducer, useEffect} from 'react';
+import {useReducer, useEffect, useRef} from 'react';
 import Header from "../commonComponents/Header"
 import Sidebar from "../commonComponents/Sidebar"
 import productfile from "./products.json"
+import { Messages } from 'primereact/messages';
+import { useNavigate } from "react-router-dom";
 
 import "../css/index.css"
 
@@ -24,6 +26,7 @@ const reducer = (state, action) => {
 };
 
 const Products = () => {
+    const navigate = useNavigate();
 
          const initialState = {
                 results: [],
@@ -38,13 +41,27 @@ const Products = () => {
                 }
             }, [loading]);
 
+            const navAddProducts = () => {
+                navigate('/AddProduct')
+            }
+
+            const navViewProducts = () => {
+                navigate("/ViewProducts")
+            }
+
+            const navDelProducts = () => {
+                navigate('/DelProducts')
+            }
+
+            const navEditProducts = () => {
+                navigate('/EditProducts')
+            }
+
+
+
 
     return (
         <>
-        <Header/>
-        <div style={{'display' : 'flex'}}>
-            <Sidebar/>
-            <div className="container">
                 <div className="grid-layout">
                 <div className="ps-grid-top">
                     <div className="ps-grid-left">
@@ -55,17 +72,17 @@ const Products = () => {
                         <h3>Manage Products</h3>
                         <div className="ps-buttons">
                         <div>
-                            <button id="b1"><span class="material-symbols-outlined">library_add</span></button>
+                            <button id="b1" onClick={navAddProducts}><span class="material-symbols-outlined">library_add</span></button>
                             <p>Add Products</p>
-                            <button id="b2"><span class="material-symbols-outlined">edit_note</span></button>
+                            <button id="b2" onClick={navEditProducts}><span class="material-symbols-outlined">edit_note</span></button>
                             <p>Edit Products</p>
                             </div>
                         <div>
 
-                        <button id="b3"><span class="material-symbols-outlined">table_view</span></button>
+                        <button id="b3" onClick={navViewProducts}><span class="material-symbols-outlined">table_view</span></button>
                         <p>View Products</p>
                         
-                        <button id="b4"><span class="material-symbols-outlined">delete_sweep</span></button>
+                        <button id="b4" onClick={navDelProducts}><span class="material-symbols-outlined">delete_sweep</span></button>
                         <p>Delete Products</p>
                         </div>
                         </div>
@@ -104,14 +121,12 @@ const Products = () => {
                         <p>Products Returned</p>
                     </div>
                     <div className="order-btn">
-                        <button>See Orders</button>
+                        <button type="button">See Orders</button>
                     </div>
-                </div>
-                </div>
-            </div>
-            </div>
 
-        </div>
+                </div>
+                </div>
+            </div>
         </>
     );
 }
