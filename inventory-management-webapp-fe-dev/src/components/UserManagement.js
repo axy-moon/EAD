@@ -7,7 +7,6 @@ import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/lara-light-indigo/theme.css";     
 import "primeicons/primeicons.css";             
 
-
 // Data table
 //import userfile from './user.json';
 import { DataTable } from 'primereact/datatable';
