@@ -3,8 +3,6 @@ import Button from '../commonComponents/Button';
 import Axios from 'axios';
 import { useNavigate } from "react-router-dom";
 
-
-// css
 import '../css/index.css';
 import '../css/login.css';
 
@@ -21,7 +19,6 @@ export default function SendEmail() {
             data:{
                 email:email,
             }
-
         }).then((response)=>{
             if(response.data=="Verified"){
                 localStorage.setItem('user_email',email);
@@ -38,8 +35,7 @@ export default function SendEmail() {
             else{
                 alert("No Such user found");
             }
-        })
-        
+        })  
     }
   return (
     <div className="loginFormContainer">
@@ -48,7 +44,6 @@ export default function SendEmail() {
             </div>
 
             <div className="right">
-               
                 <form  className="CreateAccountForm" onSubmit={handleSubmit} >
                 <div className="input-group">
                     <h1>Reset Password</h1>

@@ -25,12 +25,12 @@ const unhashToken=async(req,res)=>{
             shopname:details.shopname
         })
     }
+    else{
+        console.log("unhashToken failed");
+    }
 }
 
-
-
 const verifyUser=async(req,res)=>{
-    
     const token=req.body.token;
     console.log("inside verify token",token);
     try{
