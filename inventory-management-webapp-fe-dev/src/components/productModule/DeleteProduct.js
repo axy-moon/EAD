@@ -4,7 +4,7 @@ import './addProduct.css'
 import Header  from '../../commonComponents/Header'
 import Sidebar from '../../commonComponents/Sidebar'
 
-const ViewProducts = () => {
+const DeleteProduct = () => {
 
 
   // form-value
@@ -12,12 +12,24 @@ const ViewProducts = () => {
   const [itemCategory, setItemCategory] = useState("")
   const [itemType, setItemType] = useState("")
   const [itemId, setItemId] = useState("")
+  const [availableQuantity, setAvailableQuantity] = useState("")
+
+
+
+  const handleUploadImage = (e) =>
+  {
+    e.preventDefault()
+    const imgEle = document.getElementById('output')
+    imgEle.src = e.target.value;
+    console.log(e.target.value)
+    console.log(imgEle)
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    console.log(itemCategory,itemType,itemId)
+    console.log(itemCategory,itemType,itemId,availableQuantity)
 
-    alert("Product Details Displayed on the screen")
+    alert("Product deleted successfully")
   }
 
 
@@ -27,7 +39,7 @@ const ViewProducts = () => {
         <form>
           
         <div className="right-addProduct">
-          <h2>View Product</h2>
+          <h2>Delete Item</h2>
         
           <div className="row">
             <div className="col25">
@@ -67,31 +79,31 @@ const ViewProducts = () => {
               </select>
             </div>
           </div>
+
+          <div className="row">
+            <div className="col25">
+              <label htmlFor="aQuantity">Available Quantity</label>
+            </div>
+            <div className="col75">
+              <input type="text" id="aQuantity" name="aQuantity" disabled />
+            </div>
+          </div>
           
             <div className="row">
               <div className="col50">
                <input type="button" className="addProduct-btns" name="cancel" value="CANCEL" />
             </div>
             <div className="col50">
-              <button className="addProduct-btns" onClick={handleSubmit}>VIEW PRODUCT</button>
+              <button className="addProduct-btns" onClick={handleSubmit}>DELETE PRODUCT</button>
             </div>
             </div>
-
-            <div className="row">
-            <div className="col25">
-              <label htmlFor="itemId"><h2>Product Details</h2></label>
-              <p>Product Details should be displaed</p>
-            </div>
-            <div className="col75">
-            </div>
-          </div>
         </div> 
         
-        {/* <div className="image-upload"> */}
+        <div className="image-upload">
                 {/* <p><input type="file"  accept="image/*" name="image" id="file" onChange={handleUploadImage}/></p> */}
-                {/* <p><label htmlFor="file">Image to be displayed</label></p> */}
-                {/* <p><img id="output" width="200" style={{background:"blue"}}/></p> */}
-          {/* </div>   */}
+                <p><label htmlFor="file">Image to be displayed</label></p>
+                <p><img id="output" width="200" style={{background:"blue"}}/></p>
+          </div>  
 
         </form>
         </div>
@@ -99,4 +111,4 @@ const ViewProducts = () => {
     );
 }
 
-export default ViewProducts
+export default DeleteProduct

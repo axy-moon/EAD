@@ -13,7 +13,7 @@ const Sidebar = () => {
             <Navicon name="Dashboard" />
             <NavLink to="/Product" activeClassName="active"><Navicon name="Product" /></NavLink>
             <Navicon name="Product Sets" />
-            <Navicon name="Orders" />
+            <NavLink to="/Order" activeClassName="active"><Navicon name="Order" /></NavLink>
             <Navicon name="Customers" />
             <NavLink to="/usermanagement" activeClassName="active"><Navicon  name="User Management" /></NavLink>
         </div>

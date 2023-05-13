@@ -14,6 +14,8 @@ import Products from './components/Products';
 import Order from './components/orderModule/Order'
 import AddProduct from './components/productModule/AddProduct'
 import ViewProducts from './components/productModule/ViewProducts';
+import EditProduct from './components/productModule/EditProduct';
+import DeleteProduct from './components/productModule/DeleteProduct';
 import Layout from './commonComponents/Layout'
 
 
@@ -28,7 +30,7 @@ function App() {
         <Route path="/Reset" element={<SendOTP/>}/>
         <Route path="/ResetPassword" element={<ResetPassword/>}/>
        
-{/*         <Route path="/ViewProducts" element={<ViewProducts/>}/> */}
+        {/* <Route path="/ViewProducts" element={<ViewProducts/>}/> */}
 
         <Route element={<Layout />}>
           <Route path="/UserManagement" element={<UserManagement/>}/>
@@ -36,7 +38,8 @@ function App() {
           <Route path="/Order" element={<Order/>}/>
           <Route path="/AddProduct" element={<AddProduct/>}/>
           <Route path="/ViewProducts" element={<ViewProducts/>} />
-          <Route path="/AddProduct" element={<AddProduct/>}/>
+          <Route path="/EditProducts" element={<EditProduct/>}/>
+          <Route path="/DeleteProducts" element={<DeleteProduct/>}/>
         </Route>
         </Routes>
     </div>

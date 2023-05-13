@@ -50,7 +50,7 @@ const Products = () => {
             }
 
             const navDelProducts = () => {
-                navigate('/DelProducts')
+                navigate('/DeleteProducts')
             }
 
             const navEditProducts = () => {
