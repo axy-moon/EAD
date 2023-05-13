@@ -27,7 +27,6 @@ const sendMail=async(req,res)=>{
             })
             content=`http://localhost:3000/SetPassword/${token}`;
             console.log(content);
-            
         }
 
         if(choice== 2 ){

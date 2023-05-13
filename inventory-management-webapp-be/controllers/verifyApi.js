@@ -19,20 +19,18 @@ const verifyUser=async(req,res)=>{
 
 const verifyOtp=async(req,res)=>{
     try{
-
-            
             const User=await otpSchema.findOne({email:req.body.email});
             
             if(User.length<=0){
                  throw new Error("Account doesn't exist");
             }
             else{
-                const {Expired}=User;
-                if(Expired<Date.now()){
-                    await otpSchema.deleteMany({email:req.body.email});
-                    throw new Error("OTP Expired");
-                }
-                else{
+                // const {Expired}=User;
+                // if(Expired<Date.now()){
+                //     await otpSchema.deleteMany({email:req.body.email});
+                //     throw new Error("OTP Expired");
+                // }
+                // else{
                     const pass_otp=req.body.otp;
                     
                     console.log(User.otp);
@@ -48,7 +46,7 @@ const verifyOtp=async(req,res)=>{
                             data:"otp not verified"
                         })
                     }
-                }
+                // }
             }
             
 

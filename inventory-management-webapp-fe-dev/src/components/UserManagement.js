@@ -13,7 +13,7 @@ import "primeicons/primeicons.css";
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 
-var data;
+var data, shopName, token;
 
 const init = initialState => initialState;
 const reducer = (state, action) => {
@@ -38,14 +38,27 @@ function UserManagement() {
         const showFailure = (name) => {
           toast.current.show({severity:'error', summary: 'Error', detail:'User ' + ' already registered', life: 2000});
         }
-
+        token = localStorage.getItem('token');
         Axios({
-          method:"get",
-          url:"http://localhost:8000/fetchallUser",
+          method:"post",
+          url:"http://localhost:8000/getuserdetails",
+          data:{
+            "token":token
+          }
         }).then((response)=>{
-          //console.log(response.data.result);
-          data=response.data.result;
-          console.log(data);
+          shopName=response.data.shopname;
+          console.log("SHOP NAME : "+shopName);
+          Axios({
+            method:"get",
+            url:"http://localhost:8000/fetchUsers",
+            data:{
+              shopname:shopName
+            }
+          }).then((res)=>{
+            //console.log(response.data.result);
+            data=res.data.result;
+            console.log("Res from fetchUsers : "+data);
+          })
         })
 
         const [shopname, setShopName] = useState("");
@@ -64,7 +77,7 @@ function UserManagement() {
                 if (loading) {
                 dispatch({ type: "dataLoaded", payload: data });
                 }
-            }, [loading]);
+            }, []);
             
 
             const getSeverity = (status) => {

@@ -178,16 +178,19 @@ const login=async(req,res)=>{
 const fetchUsers=async(req,res)=>{
     try{
         const result=await schema.find({shopname:req.body.shopname}).select("-password");
-        if(result){
+        console.log("From fetchUsers API : "+result);
+        if(result.length==0){
             res.json({
-                result
+                message:"Failed to fetch data",
             })
         }
         else{
             res.json({
-                message:"Failed to fetch data",
+                result
             })
-        }    
+        }
+            
+      
     }catch(e){
         console.log(e);
     }
