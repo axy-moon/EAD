@@ -10,12 +10,18 @@ import SendOTP from "./components/SendOTP";
 import ResetPassword from './components/ResetPassword';
 
 import UserManagement from './components/UserManagement'
-import Products from './components/Products';
-import Order from './components/orderModule/Order'
+import Products from './components/Products'
 import AddProduct from './components/productModule/AddProduct'
 import ViewProducts from './components/productModule/ViewProducts';
 import EditProduct from './components/productModule/EditProduct';
 import DeleteProduct from './components/productModule/DeleteProduct';
+
+
+import Order from './components/orderModule/Order'
+import SalesOrder from './components/orderModule/SalesOrder'
+import RentOrder from './components/orderModule/RentOrder'
+import ReturnOrder from './components/orderModule/ReturnOrder'
+
 import Layout from './commonComponents/Layout'
 
 
@@ -33,13 +39,23 @@ function App() {
         {/* <Route path="/ViewProducts" element={<ViewProducts/>}/> */}
 
         <Route element={<Layout />}>
+
+          
           <Route path="/UserManagement" element={<UserManagement/>}/>
+
+
           <Route path="/Product" element={<Products/>}/>
-          <Route path="/Order" element={<Order/>}/>
           <Route path="/AddProduct" element={<AddProduct/>}/>
           <Route path="/ViewProducts" element={<ViewProducts/>} />
           <Route path="/EditProducts" element={<EditProduct/>}/>
           <Route path="/DeleteProducts" element={<DeleteProduct/>}/>
+
+          
+          <Route path="/Order" element={<Order/>}/>
+          <Route path="/SalesOrder" element={<SalesOrder/>}/>
+          <Route path="/RentOrder" element={<RentOrder/>}/>
+          <Route path="/ReturnOrder" element={<ReturnOrder/>}/>
+      
         </Route>
         </Routes>
     </div>
