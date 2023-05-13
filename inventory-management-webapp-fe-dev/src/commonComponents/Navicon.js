@@ -2,7 +2,7 @@ import React from "react";
 import { useState } from "react";
 import "../css/index.css"
 
-import DashboardCustomizeIcon from '@mui/icons-material/DashboardCustomize';
+// import DashboardCustomizeIcon from '@mui/icons-material/DashboardCustomize';
 
 const Navicon = (props) => {
     const[active, setActive] = useState(false);
@@ -14,7 +14,7 @@ const Navicon = (props) => {
     return(
         <div className="side-links">
             {/* <span onClick={handleClick} style={{ color: active ? "white" : "black" }} class="material-symbols-outlined">team_dashboard</span> */}
-           <DashboardCustomizeIcon/>
+           {/* <DashboardCustomizeIcon/> */}
                 <p>{props.name}</p>
         </div>
     );
