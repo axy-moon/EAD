@@ -1,15 +1,11 @@
 import React , {useReducer, useEffect , useState, useRef} from 'react';
-import Header from '../commonComponents/Header';
-import Sidebar from '../commonComponents/Sidebar';
 import Axios from 'axios';
-import { OverlayPanel } from 'primereact/overlaypanel';
-
+import { Toast } from 'primereact/toast'
 
 import { Tag } from 'primereact/tag';
 import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/lara-light-indigo/theme.css";     
 import "primeicons/primeicons.css";             
-import { Messages } from 'primereact/messages';
 
 
 // Data table
@@ -34,7 +30,15 @@ const reducer = (state, action) => {
 
 
 function UserManagement() {
-        
+        const toast = useRef(null);
+
+        const showSuccess = () => {
+            toast.current.show({severity:'success', summary: 'Success', detail:'User Registered Successfully', life: 2000});
+        }
+        const showFailure = (name) => {
+          toast.current.show({severity:'error', summary: 'Error', detail:'User ' + ' already registered', life: 2000});
+        }
+
         Axios({
           method:"get",
           url:"http://localhost:8000/fetchallUser",
@@ -83,15 +87,6 @@ function UserManagement() {
             return <i className="pi pi-ellipsis-v" style={{fontSize: '1.5rem', color: '#8F8F8F'}} />
           };
 
-          const msgs = useRef(null);
-
-          const addMessages = () => {
-              msgs.current.show([
-                  { severity: 'success', summary: '', detail: 'User Registered Successfully', sticky: true, closable: true }
-              ]);
-          };
-      
-
 
           const handleSubmit = (e) => {
             e.preventDefault();
@@ -110,8 +105,8 @@ function UserManagement() {
                 roles:role
               }
             }).then((response)=>{
-              alert("User, " + name+" "+ response.data);
               if (response.data==="Registered Successfully!"){
+                showSuccess()
                 Axios({
                   method:"post",
                   url:"http://localhost:8000/sendmail",
@@ -120,9 +115,10 @@ function UserManagement() {
                       choice:1
                   }
                 })
+
               }
-              
-              
+              else
+                  showFailure()
             })
           }
 
@@ -143,7 +139,7 @@ function UserManagement() {
               </p>
           </div>
             <form className="top-grid-right" onSubmit={handleSubmit} action="">
-            <Messages ref={msgs} />
+            <Toast ref={toast}/>
                 <h3>Invite Team</h3>
                    <div className='field'>
                     <p>Shop Name </p>
@@ -166,7 +162,7 @@ function UserManagement() {
                           <option value="accounts">Accounts</option>
                        </select>
                    </div>
-                   <input type="submit" onClick={addMessages} value={"REGISTER"} className='userRegisterBtn'/>
+                   <input type="submit" value={"REGISTER"} className='userRegisterBtn'/>
                    {/* <button onClick={mailSender} className='top-grid-right userRegisterBtn'>REGISTER</button> */}
                 </form>
   
