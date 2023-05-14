@@ -14,6 +14,7 @@ const ViewProducts = () => {
   const [itemType, setItemType] = useState("")
   const [itemId, setItemId] = useState("")
   const [idList,setIdList]=useState([])
+  const [idListHasValue,setIdListHasValue] = useState(false)
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -21,6 +22,7 @@ const ViewProducts = () => {
 
     alert("Product Details Displayed on the screen")
   }
+  
   
   const countSubmit=(e)=>{
     
@@ -35,15 +37,12 @@ const ViewProducts = () => {
             }).then(res=>{
                  //console.log(res.data.product[0].item_category)
                  idList.push(res.data.product)
+                 setIdListHasValue(true)
                  console.log(res.data.product)
                  console.log(idList);
           })
-        
-      }
-      
-     
+      }    
   }
-
 
     return(
         <>
@@ -87,19 +86,28 @@ const ViewProducts = () => {
             </div>
             <div className="col75">
               <select id="itemId" name="itemId"  onInput={(e)=>setItemId(e.target.value)}>
-                <option value="itemId1">--select--</option>
-                {/* {
-                  idList.map(list=>{
-                    <option value="itemId">{list._id}</option>
-                  })
-                } */} 
+                <option>--select--</option>
+{/*                  
+                 
+                  {
+                    idListHasValue && 
 
-                {
-        idList.map(product => (
-                     
-                     <option value={product.item_type}>{product.item_category}</option>
-        ))
-      } 
+                    idList[0].map(product =>{
+                    console.log(product.item_category);
+                    
+                    <option>{product.item_category}</option>
+                  
+                  })
+                  }
+
+                  {arrayOfObjects.map(({ coffee, size }) => (
+        <p key={coffee}>Coffee type {coffee} in a {size} size.</p>
+      ))} */}
+
+      {idListHasValue && idList[0].map((product) => (
+        <option key={product._id}>{product._id}</option>
+      ))}
+                
                 
               </select>
             </div>
