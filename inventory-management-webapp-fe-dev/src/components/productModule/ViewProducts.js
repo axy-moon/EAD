@@ -35,9 +35,18 @@ const ViewProducts = () => {
             item_category:itemCategory,
             item_type:itemType
             }).then(res=>{
-                 //console.log(res.data.product[0].item_category)
-                 idList.push(res.data.product)
-                 setIdListHasValue(true)
+                 var arr=res.data.product;
+                 console.log('length',arr.length)
+                if(arr.length){
+                  idList.push(res.data.product)
+                  setIdListHasValue(true)
+                 }
+                 else{
+                  idList.length=0
+                  setIdListHasValue(false)
+                 }
+                 
+                 console.log('idlist',idList.length)
                  console.log(res.data.product)
                  console.log(idList);
           })
