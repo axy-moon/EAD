@@ -131,14 +131,39 @@ const ViewProducts = () => {
             </div>
             </div>
 
-            <div className="row">
-            <div className="col25">
+<div className="row">
+            <div className="col100">
               <label htmlFor="itemId"><h2>Product Details</h2></label>
-              <p>Product Details should be displaed</p>
+              <table>
+                <tr>
+                  <td>Item Category</td>
+                  <td>Item Type</td>
+                  <td>Purchase Cost</td>
+                  <td>Quantity</td>
+                  <td>Deposit Amout</td>
+                  <td>Sales Amount</td>
+                  <td>Fine Amout</td>
+                  <td>Created Date</td>
+
+                </tr>
+                {
+                idListHasValue && idList[0].map((product) => (
+                    <tr key={product._id}>
+                      <td>{product.item_category}</td>
+                      <td>{product.item_type}</td>
+                      <td>{product.purchase_cost}</td>
+                      <td>{product.quantity}</td>
+                      <td>{product.deposit_amt}</td>
+                      <td>{product.sales_amt}</td>
+                      <td>{product.fine_amt}</td>
+                      <td>{product.createdate}</td>
+                    </tr>
+                  ))}  
+              </table>
             </div>
-            <div className="col75">
-            </div>
+        
           </div>
+
         </div> 
         
         {/* <div className="image-upload"> */}
@@ -146,8 +171,11 @@ const ViewProducts = () => {
                 {/* <p><label htmlFor="file">Image to be displayed</label></p> */}
                 {/* <p><img id="output" width="200" style={{background:"blue"}}/></p> */}
           {/* </div>   */}
-
+          
         </form>
+
+
+
         </div>
         </>
     );
