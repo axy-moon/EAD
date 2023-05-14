@@ -35,7 +35,7 @@ const getProduct=async(req,res)=>{
 
 const deleteProduct=async(req,res)=>{
     console.log(req.body._id);
-    const product = await productSchema.delete({_id:req.body._id});
+    const product = await productSchema.deleteOne({_id:req.body._id});
     if(product){
         res.json({
             message:"Successfully deleted"
