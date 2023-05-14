@@ -57,8 +57,6 @@ const SetPassword = () => {
             console.log('data is',linkValidity);
             check();
         })
-        
-        
     },[]);
 
     const [password1,setPassword1] = useState('');

@@ -29,6 +29,7 @@ const Login = (props) => {
     
     const handleSubmit = (e) => {
         e.preventDefault()
+        var dataName;
         if(state.email === "" || state.password === "")
             setError(true);
         else {
@@ -42,14 +43,26 @@ const Login = (props) => {
                 }
             }).then((response)=>{
                 const data=response.data.data;
+                Axios({
+                    method:"post",
+                    url:"http://localhost:8000/fetchUser",
+                    data:{
+                        email:state.email
+                    }
+                }).then((res)=>{
+                    console.log("RESPONSE :", res.data);
+                    dataName=res.data.result.name;
+                    console.log("Data Name : "+dataName);
+                    localStorage.setItem('Name',dataName);
+                })
                 if(data=="false"){
                     setCheck(true);
                 }
                 else{
-                    console.log('inside login',response.data.data)
+                    console.log('INSIDE LOGIN TOKEN : '+response.data.data)
                     const token=response.data.data;
                     localStorage.setItem('token',token);
-                    //localStorage.setItem('email',email);
+                    //localStorage.setItem('email',state.email);
                     navigate("/userManagement");
                 }
             })        

@@ -1,9 +1,15 @@
-import React,{useState} from 'react'
+import React,{useState, useRef} from 'react'
 import './addProduct.css'
+import Axios from 'axios';
+import { Toast } from 'primereact/toast'
 
-import Header  from '../../commonComponents/Header'
-import Sidebar from '../../commonComponents/Sidebar'
 const AddProduct = () => {
+
+  const toast = useRef(null);
+
+  const showSuccess = () => {
+      toast.current.show({severity:'success', summary: 'Success', detail:'Product Details Inserted Successfully', life: 2000});
+  }
 
   // rent or sales options (checkbox)
 
@@ -20,8 +26,7 @@ const AddProduct = () => {
   const [notes, setNotes] = useState("")
   const [depositAmount, setDepositAmount] = useState("")
   const [salesPrice, setSalesPrice] = useState("")
-
-
+  const [fineamount, setFineAmount] = useState("");
 
   const handleUploadImage = (e) =>
   {
@@ -35,9 +40,6 @@ const AddProduct = () => {
   const handleSalesType = (e) =>
   {
     e.preventDefault()
-    // console.log(e.target.checked)
-    // console.log(e.target.id)
-
     if(e.target.id === "rent")
     {
       setRentCheckbox(e.target.checked)
@@ -50,21 +52,76 @@ const AddProduct = () => {
     }
   }
 
-
   const handleSubmit = (e) => {
-    e.preventDefault()
-    setTotalCost(purchaseCost * quantity)
-    console.log(itemCategory,itemType,purchaseCost,quantity,totalCost,notes,depositAmount,salesPrice)
-
-    alert("Item added successfully")
+    e.preventDefault();
+    setTotalCost(purchaseCost * quantity);
+    console.log(itemCategory,itemType,purchaseCost,quantity,totalCost,notes,depositAmount,salesPrice);
+    
+    if(rentCheckbox == true && salesCheckbox == true){
+      Axios({
+        method:"post",
+        url:"http://localhost:8000/addProduct",
+        data:{
+          item_category: itemCategory,
+          item_type: itemType,
+          purchase_cost: purchaseCost,
+          notes: notes,
+          quantity: quantity,
+          rent: rentCheckbox,
+          sales: salesCheckbox,
+          deposit_amt: depositAmount,
+          sales_amt: salesPrice,
+          fine_amt: fineamount
+        }
+      }).then((response)=>{
+        showSuccess();
+      })
+    }
+    else if(rentCheckbox == true && salesCheckbox == false){
+      Axios({
+        method:"post",
+        url:"http://localhost:8000/addProduct",
+        data:{
+          item_category: itemCategory,
+          item_type: itemType,
+          purchase_cost: purchaseCost,
+          notes: notes,
+          quantity: quantity,
+          rent: rentCheckbox,
+          sales: salesCheckbox,
+          deposit_amt: depositAmount,
+          fine_amt: fineamount
+        }
+      }).then((response)=>{
+        showSuccess();
+      })
+    }
+    else if(rentCheckbox == false && salesCheckbox == true){
+      Axios({
+        method:"post",
+        url:"http://localhost:8000/addProduct",
+        data:{
+          item_category: itemCategory,
+          item_type: itemType,
+          purchase_cost: purchaseCost,
+          notes: notes,
+          quantity: quantity,
+          rent: rentCheckbox,
+          sales: salesCheckbox,
+          sales_amt: salesPrice,
+          fine_amt: fineamount
+        }
+      }).then((response)=>{
+        showSuccess();
+      })
+    }
   }
-
 
   return (
     <>
       <div className="container-addProduct">
+        <Toast ref={toast}/>
         <form>
-          
         <div className="right-addProduct">
           <h2>Add single Item</h2>
         
@@ -127,6 +184,15 @@ const AddProduct = () => {
             </div>
             <div className="col75">
               <textarea type="text" id="notes" name="notes" onInput={(e)=>setNotes(e.target.value)}/>
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col25">
+              <label htmlFor="notes">Fine Amount</label>
+            </div>
+            <div className="col75">
+              <textarea type="text" id="famount" name="famount" onInput={(e)=>setFineAmount(e.target.value)}/>
             </div>
           </div>
 

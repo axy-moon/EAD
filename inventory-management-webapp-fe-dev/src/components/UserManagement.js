@@ -47,17 +47,17 @@ function UserManagement() {
         }).then((response)=>{
           shopName=response.data.shopname;
           console.log("SHOP NAME : "+shopName);
-          Axios({
-            method:"get",
-            url:"http://localhost:8000/fetchUsers",
-            data:{
-              shopname:shopName
-            }
-          }).then((res)=>{
-            //console.log(response.data.result);
-            data=res.data.result;
-            console.log("Res from fetchUsers : "+data);
-          })
+          // Axios({
+          //   method:"get",
+          //   url:"http://localhost:8000/fetchUsers",
+          //   data:{
+          //     shopname:shopName
+          //   }
+          // }).then((res)=>{
+          //   //console.log(response.data.result);
+          //   data=res.data.result;
+          //   console.log("Res from fetchUsers : "+data);
+          // })
         })
 
         const [shopname, setShopName] = useState("");

@@ -156,7 +156,7 @@ const login=async(req,res)=>{
         const result=await schema.findOne({email:email});
         console.log(result);
         if(result && await bcrypt.compare(req.body.password,result.password) ){
-            console.log("inside login ")
+            console.log("INSIDE LOGIN")
             const user={email:email,shopname:result.shopname};
             const accessToken=jwt.sign(user,process.env.ACCESS_TOKEN_SECRET);
             res.json({

@@ -1,5 +1,8 @@
 const mongoose=require("mongoose");
 const productSchema=new mongoose.Schema({
+    product_id:{
+        type:String
+    },
     item_category:{
         type:String,
         required:true
@@ -24,15 +27,15 @@ const productSchema=new mongoose.Schema({
         type:Boolean,
         default:false
     },
-    Sales:{
+    sales:{
         type:Boolean,
         default:false
     },
     deposit_amt:{
-        type:Number,
+        type:Number
     },
     sales_amt:{
-        type:Number,
+        type:Number
     },
     fine_amt:{
         type:Number,
@@ -41,7 +44,6 @@ const productSchema=new mongoose.Schema({
         type:Date,
         default:Date.now
     }
-
 })
 
 module.exports=new mongoose.model('products',productSchema);
