@@ -1,23 +1,47 @@
 import React,{useState} from 'react'
 import './addProduct.css'
+import Axios from 'axios';
 
 import Header  from '../../commonComponents/Header'
 import Sidebar from '../../commonComponents/Sidebar'
-
+let count=0;
 const ViewProducts = () => {
 
-
+  
   // form-value
 
   const [itemCategory, setItemCategory] = useState("")
   const [itemType, setItemType] = useState("")
   const [itemId, setItemId] = useState("")
+  const [idList,setIdList]=useState([])
 
   const handleSubmit = (e) => {
     e.preventDefault()
     console.log(itemCategory,itemType,itemId)
 
     alert("Product Details Displayed on the screen")
+  }
+  
+  const countSubmit=(e)=>{
+    
+      count+=1
+      console.log('countis ',count)
+      if(count>=2){
+
+        
+           Axios.post('http://localhost:8000/getItem',{
+            item_category:itemCategory,
+            item_type:itemType
+            }).then(res=>{
+                 //console.log(res.data.product[0].item_category)
+                 idList.push(res.data.product)
+                 console.log(res.data.product)
+                 console.log(idList);
+          })
+        
+      }
+      
+     
   }
 
 
@@ -34,7 +58,8 @@ const ViewProducts = () => {
               <label htmlFor="itemCategory">Item Category</label>
             </div>
             <div className="col75">
-              <select id="itemCategory" name="itemCategory" onInput={(e)=>setItemCategory(e.target.value)}>
+              <select id="itemCategory" name="itemCategory" onInput={(e)=>setItemCategory(e.target.value)} onChange={countSubmit}>
+               <option value="itemCat1">--select--</option>
                 <option value="itemCat1">itemCat1</option>
                 <option value="itemCat2">itemCat2</option>
                 <option value="itemCat3">itemCat3</option>
@@ -47,7 +72,8 @@ const ViewProducts = () => {
               <label htmlFor="itemType">Item Type</label>
             </div>
             <div className="col75">
-              <select id="itemType" name="itemType" onInput={(e)=>setItemType(e.target.value)}>
+              <select id="itemType" name="itemType" onInput={(e)=>setItemType(e.target.value)} onChange={countSubmit} >
+              <option value="itemCat1">--select--</option>
                 <option value="itemType1">itemType1</option>
                 <option value="itemType2">itemType2</option>
                 <option value="itemType3">itemType3</option>
@@ -60,10 +86,21 @@ const ViewProducts = () => {
               <label htmlFor="itemId">Item Id</label>
             </div>
             <div className="col75">
-              <select id="itemId" name="itemId" onInput={(e)=>setItemId(e.target.value)}>
-                <option value="itemId1">itemId1</option>
-                <option value="itemId2">itemId2</option>
-                <option value="itemId2">itemId3</option>
+              <select id="itemId" name="itemId"  onInput={(e)=>setItemId(e.target.value)}>
+                <option value="itemId1">--select--</option>
+                {/* {
+                  idList.map(list=>{
+                    <option value="itemId">{list._id}</option>
+                  })
+                } */} 
+
+                {
+        idList.map(product => (
+                     
+                     <option value={product.item_type}>{product.item_category}</option>
+        ))
+      } 
+                
               </select>
             </div>
           </div>

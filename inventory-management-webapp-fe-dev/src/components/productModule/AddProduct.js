@@ -27,6 +27,7 @@ const AddProduct = () => {
   const [depositAmount, setDepositAmount] = useState("")
   const [salesPrice, setSalesPrice] = useState("")
   const [fineamount, setFineAmount] = useState("");
+  const [productid, setId] = useState("");
 
   const handleUploadImage = (e) =>
   {
@@ -104,6 +105,7 @@ const AddProduct = () => {
           item_category: itemCategory,
           item_type: itemType,
           purchase_cost: purchaseCost,
+          product_id:productid,
           notes: notes,
           quantity: quantity,
           rent: rentCheckbox,
@@ -157,6 +159,14 @@ const AddProduct = () => {
             </div>
             <div className="col75">
               <input type="text" id="purchaseCost" name="purchaseCost" onInput={(e)=>setPurchaseCost(e.target.value)} />
+            </div>
+          </div>
+          <div className="row">
+            <div className="col25">
+              <label htmlFor="purchaseCost">Product Id</label>
+            </div>
+            <div className="col75">
+              <input type="text" id="purchaseCost" name="productid" onInput={(e)=>setId(e.target.value)} />
             </div>
           </div>
 

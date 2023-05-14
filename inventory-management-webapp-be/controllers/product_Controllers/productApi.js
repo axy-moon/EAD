@@ -17,6 +17,23 @@ const addProduct = async(req,res)=>{
     }
 }
 
+const getProduct=async(req,res)=>{
+    console.log(req.body.item_category);
+    console.log(req.body.item_type);
+    const product = await productSchema.find({item_category:req.body.item_category,item_type:req.body.item_type});
+    if(product){
+        res.json({
+            product
+        })
+    }
+    else{
+        res.json({
+            message:"Failed to fetch product"
+        })
+        }
+}
+
 module.exports={
-    addProduct
+    addProduct,
+    getProduct
 }
