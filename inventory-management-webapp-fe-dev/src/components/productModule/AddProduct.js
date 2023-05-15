@@ -65,6 +65,7 @@ const AddProduct = () => {
         data:{
           item_category: itemCategory,
           item_type: itemType,
+          product_id:productid,
           purchase_cost: purchaseCost,
           notes: notes,
           quantity: quantity,
@@ -85,6 +86,7 @@ const AddProduct = () => {
         data:{
           item_category: itemCategory,
           item_type: itemType,
+          product_id:productid,
           purchase_cost: purchaseCost,
           notes: notes,
           quantity: quantity,
@@ -104,8 +106,8 @@ const AddProduct = () => {
         data:{
           item_category: itemCategory,
           item_type: itemType,
-          purchase_cost: purchaseCost,
           product_id:productid,
+          purchase_cost: purchaseCost,
           notes: notes,
           quantity: quantity,
           rent: rentCheckbox,
@@ -133,9 +135,10 @@ const AddProduct = () => {
             </div>
             <div className="col75">
               <select id="itemCategory" name="itemCategory" onInput={(e)=>setItemCategory(e.target.value)}>
-                <option value="itemCat1">itemCat1</option>
-                <option value="itemCat2">itemCat2</option>
-                <option value="itemCat3">itemCat3</option>
+                <option value="default">--Select--</option>
+                <option value="Stationary">Stationary</option>
+                <option value="Toys">Toys</option>
+                <option value="Gift Items">Gift Items</option>
               </select>
             </div>
           </div>
@@ -146,10 +149,27 @@ const AddProduct = () => {
             </div>
             <div className="col75">
               <select id="itemType" name="itemType" onInput={(e)=>setItemType(e.target.value)}>
-                <option value="itemType1">itemType1</option>
-                <option value="itemType2">itemType2</option>
-                <option value="itemType3">itemType3</option>
+                <option value="default">--Select--</option>
+                <option value="Pen">Pen</option>
+                <option value="Paper">Paper</option>
+                <option value="Scale">Scale</option>
+                <option value="Colour Pens">Colour Pens</option>
+                <option value="Remote Control Toys">Remote Control Toys</option>
+                <option value="Soft Toys">Soft Toys</option>
+                <option value="Plastic Toys">Plastic Toys</option>
+                <option value="Photo Frames">Photo Frames</option>
+                <option value="Glass Products">Glass Products</option>
+                <option value="Coffee Mugs">Coffee Mugs</option>
               </select>
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col25">
+              <label htmlFor="purchaseCost">Product Id</label>
+            </div>
+            <div className="col75">
+              <input type="text" id="purchaseCost" name="productid" onInput={(e)=>setId(e.target.value)} />
             </div>
           </div>
 
@@ -159,14 +179,6 @@ const AddProduct = () => {
             </div>
             <div className="col75">
               <input type="text" id="purchaseCost" name="purchaseCost" onInput={(e)=>setPurchaseCost(e.target.value)} />
-            </div>
-          </div>
-          <div className="row">
-            <div className="col25">
-              <label htmlFor="purchaseCost">Product Id</label>
-            </div>
-            <div className="col75">
-              <input type="text" id="purchaseCost" name="productid" onInput={(e)=>setId(e.target.value)} />
             </div>
           </div>
 
@@ -257,11 +269,11 @@ const AddProduct = () => {
             </div>
         </div> 
         
-        <div className="image-upload">
+        {/* <div className="image-upload">
                 <p><input type="file"  accept="image/*" name="image" id="file" onChange={handleUploadImage}/></p>
                 <p><label htmlFor="file">Upload Image</label></p>
                 <p><img id="output" width="200" style={{background:"blue"}}/></p>
-          </div>  
+          </div>   */}
 
         </form>
         </div>

@@ -39,7 +39,7 @@ const updateUser=async(req,res)=>{
         else{
             var myQuery={_id:user};
             var query={$set:{_id:user,password:hash}};
-            var query1={$set:{_id:user,status:"active"}};
+            var query1={$set:{_id:user,status:"Active"}};
             const result=async()=>{const res=await schema.updateOne(myQuery,query)};
             const result1=async()=>{const res=await schema.updateOne(myQuery,query1)};
             result(); 

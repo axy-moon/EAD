@@ -1,14 +1,20 @@
-import React,{useState} from "react";
+import React,{useState, useRef} from "react";
 import Button from '../commonComponents/Button';
 import Axios from 'axios';
 import { useNavigate } from "react-router-dom";
+import { Toast } from 'primereact/toast';
 
 import '../css/index.css';
 import '../css/login.css';
 
 export default function SendEmail() {
+    const toast = useRef(null);
     const navigate = useNavigate();
     const [email,setEmail] = useState('');
+    const showNouser = () => {
+        toast.current.show({severity:'error', summary: 'Error', detail:'No Such User Found !!!', life: 5000});
+    }
+
     const handleSubmit = async (e) => {
 
         e.preventDefault()
@@ -33,7 +39,7 @@ export default function SendEmail() {
                 navigate("/Reset");
             }
             else{
-                alert("No Such user found");
+                showNouser();
             }
         })  
     }
@@ -44,6 +50,7 @@ export default function SendEmail() {
             </div>
 
             <div className="right">
+            <Toast ref={toast}/>
                 <form  className="CreateAccountForm" onSubmit={handleSubmit} >
                 <div className="input-group">
                     <h1>Reset Password</h1>

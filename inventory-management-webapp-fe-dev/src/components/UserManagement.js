@@ -15,6 +15,7 @@ import { Column } from 'primereact/column';
 var data, shopName, token;
 
 const init = initialState => initialState;
+
 const reducer = (state, action) => {
   switch (action.type) {
     case "dataLoaded":
@@ -58,6 +59,13 @@ function UserManagement() {
           //   data=res.data.result;
           //   console.log("Res from fetchUsers : "+data);
           // })
+          Axios({
+              method:"get",
+              url:"http://localhost:8000/fetchallUser"
+            }).then((res)=>{
+              data=res.data.result;
+              console.log("Res from fetchUsers : "+data);
+            })
         })
 
         const [shopname, setShopName] = useState("");
@@ -76,12 +84,12 @@ function UserManagement() {
                 if (loading) {
                 dispatch({ type: "dataLoaded", payload: data });
                 }
-            }, []);
+            }, [loading]);
             
 
             const getSeverity = (status) => {
               switch(status) {
-                case 'active':
+                case 'Active':
                   return 'success';
                 case 'Pending':
                   return 'warning';
@@ -127,7 +135,6 @@ function UserManagement() {
                       choice:1
                   }
                 })
-
               }
               else
                   showFailure()
@@ -169,9 +176,9 @@ function UserManagement() {
                    <p>Role</p>
                    <select name="role" onChange={e=>setRole(e.target.value)}>
                            <option value="" hidden selected >Choose the role of the team member</option>
-                           <option value="admin">Admin</option>
-                           <option value="sales">Sales</option>
-                          <option value="accounts">Accounts</option>
+                           <option value="Admin">Admin</option>
+                           <option value="Sales">Sales</option>
+                          <option value="Accounts">Accounts</option>
                        </select>
                    </div>
                    <input type="submit" value={"REGISTER"} className='userRegisterBtn'/>
@@ -182,7 +189,6 @@ function UserManagement() {
         <div className='bottom-grid'>
                     <div className='dataTable'>
                       <p className='center-head'>Current Members</p>
-
                        <DataTable value={results} scrollable scrollHeight="240px" showGridlines tableStyle={{ textAlign:'center' }}>
                        <Column field="name" header="Name"></Column>
                        <Column field="email" header="Email"></Column>

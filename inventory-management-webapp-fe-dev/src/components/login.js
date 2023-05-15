@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Button from '../commonComponents/Button';
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
@@ -84,10 +84,10 @@ const Login = (props) => {
                     <input type="password" id="password" placeholder="Minimum 8 characters" value={state.password} onChange={handleChange} />
                     <br/>
                     <div className="loginEl">
-                        <div className="check">
+                        {/* <div className="check">
                         <input type="checkbox"/>
                         <label>Remember Me</label>
-                        </div>
+                        </div> */}
                         <Link to="/SendEmail" className="loginEl-link">Forgot Password</Link>
                     </div>
                     <Button value='Login' id='CreateUserButton' />

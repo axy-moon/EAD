@@ -14,14 +14,35 @@ const ViewProducts = () => {
   const [itemType, setItemType] = useState("")
   const [itemId, setItemId] = useState("")
   const [idList,setIdList]=useState([])
+  const [product,setProduct]=useState([])
   const [idListHasValue,setIdListHasValue] = useState(false)
+  const [productHasValue,setProductHasValue] = useState(false)
 
   const handleSubmit = (e) => {
     e.preventDefault()
     console.log(itemCategory,itemType,itemId)
 
-    alert("Product Details Displayed on the screen")
-  }
+    Axios.post('http://localhost:8000/getItemOne',{
+            // item_category:itemCategory,
+            // item_type:itemType,
+            _id:itemId
+            }).then(res=>{
+                 var arr=res.data;
+                 console.log('length',arr)
+                if(arr){
+                  product.push(res.data.product)
+                  setProductHasValue(true)
+                 }
+                 else{
+                  product.length=0
+                  setProductHasValue(false)
+                 }
+                 
+                 console.log('product',product.length)
+                 console.log(res.data.product)
+                 console.log(product);
+          })
+    }
   
   
   const countSubmit=(e)=>{
@@ -67,10 +88,10 @@ const ViewProducts = () => {
             </div>
             <div className="col75">
               <select id="itemCategory" name="itemCategory" onInput={(e)=>setItemCategory(e.target.value)} onChange={countSubmit}>
-               <option value="itemCat1">--select--</option>
-                <option value="itemCat1">itemCat1</option>
-                <option value="itemCat2">itemCat2</option>
-                <option value="itemCat3">itemCat3</option>
+              <option value="default">--Select--</option>
+                <option value="Stationary">Stationary</option>
+                <option value="Toys">Toys</option>
+                <option value="Gift Items">Gift Items</option>
               </select>
             </div>
           </div>
@@ -81,10 +102,17 @@ const ViewProducts = () => {
             </div>
             <div className="col75">
               <select id="itemType" name="itemType" onInput={(e)=>setItemType(e.target.value)} onChange={countSubmit} >
-              <option value="itemCat1">--select--</option>
-                <option value="itemType1">itemType1</option>
-                <option value="itemType2">itemType2</option>
-                <option value="itemType3">itemType3</option>
+              <option value="default">--Select--</option>
+                <option value="Pen">Pen</option>
+                <option value="Paper">Paper</option>
+                <option value="Scale">Scale</option>
+                <option value="Colour Pens">Colour Pens</option>
+                <option value="Remote Control Toys">Remote Control Toys</option>
+                <option value="Soft Toys">Soft Toys</option>
+                <option value="Plastic Toys">Plastic Toys</option>
+                <option value="Photo Frames">Photo Frames</option>
+                <option value="Glass Products">Glass Products</option>
+                <option value="Coffee Mugs">Coffee Mugs</option>
               </select>
             </div>
           </div>
@@ -95,7 +123,7 @@ const ViewProducts = () => {
             </div>
             <div className="col75">
               <select id="itemId" name="itemId"  onInput={(e)=>setItemId(e.target.value)}>
-                <option>--select--</option>
+                <option>--Select--</option>
 {/*                  
                  
                   {
@@ -147,16 +175,16 @@ const ViewProducts = () => {
 
                 </tr>
                 {
-                idListHasValue && idList[0].map((product) => (
-                    <tr key={product._id}>
-                      <td>{product.item_category}</td>
-                      <td>{product.item_type}</td>
-                      <td>{product.purchase_cost}</td>
-                      <td>{product.quantity}</td>
-                      <td>{product.deposit_amt}</td>
-                      <td>{product.sales_amt}</td>
-                      <td>{product.fine_amt}</td>
-                      <td>{product.createdate}</td>
+                productHasValue && product.map((item) => (
+                    <tr key={item._id}>
+                      <td>{item.item_category}</td>
+                      <td>{item.item_type}</td>
+                      <td>{item.purchase_cost}</td>
+                      <td>{item.quantity}</td>
+                      <td>{item.deposit_amt}</td>
+                      <td>{item.sales_amt}</td>
+                      <td>{item.fine_amt}</td>
+                      <td>{item.createdate}</td>
                     </tr>
                   ))}  
               </table>

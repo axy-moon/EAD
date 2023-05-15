@@ -10,7 +10,7 @@ const sendMail=async(req,res)=>{
         const email=req.body.email;
         console.log(email);
         const choice=req.body.choice;
-        var content;
+        var content, OTP;
 
         const olduser=await schema.findOne({email:email});
         console.log(olduser);
@@ -23,21 +23,25 @@ const sendMail=async(req,res)=>{
         if(choice==1){
             const secret = process.env.ACCESS_TOKEN_SECRET;
             const token=jwt.sign({email:olduser.email,_id:olduser._id},secret,{
-              expiresIn:"1m"
+              expiresIn:"3m"
             })
-            content=`http://localhost:3000/SetPassword/${token}`;
+            content = 'Welcome to Inventory Management System !!!\n\n'
+                      + 'Here is the Link provided for setting up your Password for your Login : \n\n';
+            content = content + `http://localhost:3000/SetPassword/${token}`;
             console.log(content);
         }
 
         if(choice== 2 ){
-            content= otpGenerator.generate(4, { upperCaseAlphabets: false, specialChars: false,lowerCaseAlphabets:false });
+            OTP = otpGenerator.generate(4, { upperCaseAlphabets: false, specialChars: false,lowerCaseAlphabets:false });
+            content = 'Welcome to Inventory Management System !!!\n\n'
+            + 'Here is the OTP provided for resetting your Password : \n\n';
+            content = content + OTP;
             console.log(content);
-            bcrypt.hash(content,0,(err, hash)=>{
+            bcrypt.hash(OTP,0,(err, hash)=>{
               if(err){
                   next(err)
               }
               else{
-                 
                   const result=async()=>{
                   const user=await Otp.findOne({email:olduser.email});
                   console.log("user in otp",user);
@@ -48,7 +52,6 @@ const sendMail=async(req,res)=>{
                       const otp=new Otp({email:olduser.email,otp:hash});
                       const res= await otp.save();
                     }
-                    
                   }
                   else{
                     const otp=new Otp({email:olduser.email,otp:hash});
@@ -62,7 +65,6 @@ const sendMail=async(req,res)=>{
                     var up_otp={$set:{otp:"Expired"} };
                     const result=async()=>{const res=await Otp.updateOne(query,up_otp)};
                     result();
-
                   }
                 };
                  result();

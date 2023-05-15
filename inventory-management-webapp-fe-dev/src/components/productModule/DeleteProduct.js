@@ -18,6 +18,7 @@ const DeleteProduct = () => {
   const [availableQuantity, setAvailableQuantity] = useState("")
   const [idList,setIdList]=useState([])
   const [idListHasValue,setIdListHasValue] = useState(false)
+  const [buttondisabled,setbuttondisabled]=useState(true)
 
 
 
@@ -45,6 +46,7 @@ const DeleteProduct = () => {
             console.log('length',arr.length)
            if(arr.length){
              idList.push(res.data.product)
+             setAvailableQuantity(res.data.product.quantity)
              setIdListHasValue(true)
             }
             else{
@@ -56,6 +58,24 @@ const DeleteProduct = () => {
     }    
 }
 
+const getData=(e)=>{
+  Axios.post('http://localhost:8000/getQuantity',{
+    item_category:itemCategory,
+    item_type:itemType,
+    _id:itemId
+  }).then(res=>{
+     setAvailableQuantity(res.data.product[0].quantity)
+     alert("Quantity",res.data.product.quantity)
+     if(res.data.product[0].quantity!=0){
+          setbuttondisabled(true)
+          alert(buttondisabled)
+     }
+     else{
+      setbuttondisabled(false)
+      alert(buttondisabled)
+     }
+  })
+}
 
 
   const handleSubmit = (e) => {
@@ -65,7 +85,7 @@ const DeleteProduct = () => {
     Axios.post('http://localhost:8000/deleteItem',{
       _id:itemId
     }).then(res=>{
-      alert("Successfully deleted")
+      alert("deleted Successfully ")
     })
 
     //alert("Product deleted successfully")
@@ -86,10 +106,10 @@ const DeleteProduct = () => {
             </div>
             <div className="col75">
             <select id="itemCategory" name="itemCategory" onInput={(e)=>setItemCategory(e.target.value)} onChange={countSubmit}>
-               <option value="itemCat1">--select--</option>
-                <option value="itemCat1">itemCat1</option>
-                <option value="itemCat2">itemCat2</option>
-                <option value="itemCat3">itemCat3</option>
+                <option value="default">--Select--</option>
+                <option value="Stationary">Stationary</option>
+                <option value="Toys">Toys</option>
+                <option value="Gift Items">Gift Items</option>
               </select>
             </div>
           </div>
@@ -100,9 +120,17 @@ const DeleteProduct = () => {
             </div>
             <div className="col75">
               <select id="itemType" name="itemType" onInput={(e)=>setItemType(e.target.value)} onChange={countSubmit}>
-                <option value="itemType1">itemType1</option>
-                <option value="itemType2">itemType2</option>
-                <option value="itemType3">itemType3</option>
+                <option value="default">--Select--</option>
+                <option value="Pen">Pen</option>
+                <option value="Paper">Paper</option>
+                <option value="Scale">Scale</option>
+                <option value="Colour Pens">Colour Pens</option>
+                <option value="Remote Control Toys">Remote Control Toys</option>
+                <option value="Soft Toys">Soft Toys</option>
+                <option value="Plastic Toys">Plastic Toys</option>
+                <option value="Photo Frames">Photo Frames</option>
+                <option value="Glass Products">Glass Products</option>
+                <option value="Coffee Mugs">Coffee Mugs</option>
               </select>
             </div>
           </div>
@@ -112,7 +140,7 @@ const DeleteProduct = () => {
               <label htmlFor="itemId">Item Id</label>
             </div>
             <div className="col75">
-              <select id="itemId" name="itemId" onInput={(e)=>setItemId(e.target.value)}>
+              <select id="itemId" name="itemId" onInput={(e)=>setItemId(e.target.value)} onChange={getData}>
                 <option value="itemCat1">---select--</option>
                 {idListHasValue && idList[0].map((product) => (
                  <option key={product._id}>{product._id}</option>
@@ -126,7 +154,7 @@ const DeleteProduct = () => {
               <label htmlFor="aQuantity">Available Quantity</label>
             </div>
             <div className="col75">
-              <input type="text" id="aQuantity" name="aQuantity" disabled />
+              <input type="text" id="aQuantity" name="aQuantity" value={availableQuantity} />
             </div>
           </div>
           
@@ -135,16 +163,16 @@ const DeleteProduct = () => {
                <input type="button" className="addProduct-btns" name="cancel" value="CANCEL" />
             </div>
             <div className="col50">
-              <button className="addProduct-btns" onClick={handleSubmit}>DELETE PRODUCT</button>
+              <button disabled={buttondisabled} className="addProduct-btns" onClick={handleSubmit}>DELETE PRODUCT</button>
             </div>
             </div>
         </div> 
         
-        <div className="image-upload">
-                {/* <p><input type="file"  accept="image/*" name="image" id="file" onChange={handleUploadImage}/></p> */}
+        {/* <div className="image-upload">
+                <p><input type="file"  accept="image/*" name="image" id="file" onChange={handleUploadImage}/></p>
                 <p><label htmlFor="file">Image to be displayed</label></p>
                 <p><img id="output" width="200" style={{background:"blue"}}/></p>
-          </div>  
+          </div>   */}
 
         </form>
         </div>

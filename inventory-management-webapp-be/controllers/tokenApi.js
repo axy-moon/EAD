@@ -40,7 +40,7 @@ const verifyUser=async(req,res)=>{
         if(!olduser){
             return res.send("No user found")
         }
-        if (olduser.status=="active"){
+        if (olduser.status=="Active"){
             return res.send("Already Set your Password");
         }
         

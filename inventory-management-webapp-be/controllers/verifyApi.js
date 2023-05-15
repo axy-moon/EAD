@@ -36,12 +36,14 @@ const verifyOtp=async(req,res)=>{
                     console.log(User.otp);
                     console.log(pass_otp);
                     if(await bcrypt.compare(pass_otp,User.otp)){
+                        console.log("INSIDE VALID OTP JSON");
                         res.json({
                             data:"valid"
                         })
                         await otpSchema.deleteMany({email:req.body.email});
                     }
                     else{
+                        console.log("INSIDE VALID OTP JSON - FAILURE");
                         res.json({
                             data:"otp not verified"
                         })

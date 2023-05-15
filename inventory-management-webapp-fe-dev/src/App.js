@@ -30,6 +30,7 @@ function App() {
     <div className="App">
       <Routes>
         {/* <Route path="/" element={<Home/>}/> */}
+        <Route path="/" element={<Login/>}/>
         <Route path="/SetPassword/:token" element={<SetPassword/>}/>
         <Route path="/Login" element={<Login/>}/>
         <Route path="/SendEmail" element={<SendEmail/>}/>

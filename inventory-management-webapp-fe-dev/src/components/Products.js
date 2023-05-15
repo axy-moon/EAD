@@ -5,6 +5,7 @@ import Sidebar from "../commonComponents/Sidebar"
 import productfile from "./products.json"
 import { Messages } from 'primereact/messages';
 import { useNavigate } from "react-router-dom";
+import Axios from 'axios';
 
 import "../css/index.css"
 
@@ -15,6 +16,7 @@ import "primereact/resources/themes/lara-light-indigo/theme.css";
 import DoughnutChart from "./Chart";
 
 const init = initialState => initialState;
+var data;
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -28,6 +30,14 @@ const reducer = (state, action) => {
 const Products = () => {
     const navigate = useNavigate();
 
+        Axios({
+            method:"get",
+            url:"http://localhost:8000/fetchProductDetails"
+        }).then((res)=>{
+            data = res.data.product;
+            console.log("DATA FROM FETCH ALL PRODUCT API : "+data);
+        })
+
          const initialState = {
                 results: [],
                 loading: true
@@ -37,7 +47,7 @@ const Products = () => {
 
             useEffect(() => {
                 if (loading) {
-                dispatch({ type: "dataLoaded", payload: productfile.data });
+                dispatch({ type: "dataLoaded", payload: data });
                 }
             }, [loading]);
 
@@ -56,9 +66,6 @@ const Products = () => {
             const navEditProducts = () => {
                 navigate('/EditProducts')
             }
-
-
-
 
     return (
         <>
@@ -97,9 +104,9 @@ const Products = () => {
                 <h3>Recently Added Products</h3>
                 <div className="ps-dt-table">
                 <DataTable value={results} scrollable scrollHeight="240px" size="small" tableStyle={{ width: '40rem' }}>
-                    <Column field="code" header="CODE"></Column>
-                    <Column field="name" header="NAME"></Column>
-                    <Column field="category" header="CATEGORY"></Column>
+                    <Column field="product_id" header="PRODUCT ID"></Column>
+                    <Column field="item_category" header="ITEM CATEGORY"></Column>
+                    <Column field="item_type" header="ITEM TYPE"></Column>
                     <Column field="quantity" header="QUANTITY"></Column>
                 </DataTable>
                 </div>
