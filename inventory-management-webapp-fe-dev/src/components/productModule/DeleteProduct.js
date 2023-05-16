@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useState, useEffect} from 'react'
 import './addProduct.css';
 
 import Axios from 'axios'
@@ -19,7 +19,26 @@ const DeleteProduct = () => {
   const [idList,setIdList]=useState([])
   const [idListHasValue,setIdListHasValue] = useState(false)
   const [buttondisabled,setbuttondisabled]=useState(true)
+  const [categoryList,setCategoryList]=useState([])
+  const [categoryListHasValue,setCategoryListHasValue] = useState(false)
+  const [typeList,setTypeList]=useState([])
+  const [typeListHasValue,setTypeListHasValue] = useState(false)
 
+  useEffect(() => {
+    Axios.post("http://localhost:8000/uniqueCategory").then((res)=>{
+      var arr=res.data.category;
+      console.log('length',arr.length)
+      if(arr.length){
+        console.log(res.data.category);
+        categoryList.push(res.data.category);
+        setCategoryListHasValue(true);
+      }
+      else{
+        categoryList.length=0;
+        setCategoryListHasValue(false);
+      }
+    })
+}, []);
 
 
   const handleUploadImage = (e) =>
@@ -77,6 +96,25 @@ const getData=(e)=>{
   })
 }
 
+const handleItemCategory = (e) =>{
+  e.preventDefault();
+  setItemCategory(e.target.value);
+
+  Axios.post("http://localhost:8000/getUniqueItemtype",{
+    itemcategory: itemCategory
+  }).then((res)=>{
+      var arr=res.data.item_type;
+      if(arr.length){
+        console.log(res.data.item_type);
+        typeList.push(res.data.item_type);
+        setTypeListHasValue(true);
+      }
+      else{
+        typeList.length=0;
+        setTypeListHasValue(false);
+      }
+  })
+}
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -94,7 +132,7 @@ const getData=(e)=>{
 
     return(
         <>
-            <div className="container-addProduct">
+        <div className="container-addProduct">
         <form>
           
         <div className="right-addProduct">
@@ -104,12 +142,20 @@ const getData=(e)=>{
             <div className="col25">
               <label htmlFor="itemCategory">Item Category</label>
             </div>
-            <div className="col75">
-            <select id="itemCategory" name="itemCategory" onInput={(e)=>setItemCategory(e.target.value)} onChange={countSubmit}>
-                <option value="default">--Select--</option>
+            {/* <div className="col75">
+              <select id="itemCategory" name="itemCategory" onInput={(e)=>setItemCategory(e.target.value)} onChange={countSubmit}>
+              <option value="default">--Select--</option>
                 <option value="Stationary">Stationary</option>
                 <option value="Toys">Toys</option>
                 <option value="Gift Items">Gift Items</option>
+              </select>
+            </div> */}
+            <div className="col75">
+              <select id="itemCategory" name="itemCategory"  onInput={handleItemCategory}>
+                <option value="default">---Select---</option>
+                {categoryListHasValue && categoryList[0].map((category) => (
+                 <option key={category}>{category}</option>
+                ))}
               </select>
             </div>
           </div>
@@ -118,9 +164,9 @@ const getData=(e)=>{
             <div className="col25">
               <label htmlFor="itemType">Item Type</label>
             </div>
-            <div className="col75">
-              <select id="itemType" name="itemType" onInput={(e)=>setItemType(e.target.value)} onChange={countSubmit}>
-                <option value="default">--Select--</option>
+            {/* <div className="col75">
+              <select id="itemType" name="itemType" onInput={(e)=>setItemType(e.target.value)} onChange={countSubmit} >
+              <option value="default">--Select--</option>
                 <option value="Pen">Pen</option>
                 <option value="Paper">Paper</option>
                 <option value="Scale">Scale</option>
@@ -132,6 +178,14 @@ const getData=(e)=>{
                 <option value="Glass Products">Glass Products</option>
                 <option value="Coffee Mugs">Coffee Mugs</option>
               </select>
+            </div> */}
+            <div className="col75">
+              <select id="itemType" name="itemType"  onChange={(e)=>setItemType(e.target.value)}>
+                <option value="default">---Select---</option>
+                {typeListHasValue && typeList[0].map((item_type) => (
+                 <option key={item_type}>{item_type}</option>
+                ))}
+              </select>
             </div>
           </div>
 
@@ -141,9 +195,9 @@ const getData=(e)=>{
             </div>
             <div className="col75">
               <select id="itemId" name="itemId" onInput={(e)=>setItemId(e.target.value)} onChange={getData}>
-                <option value="itemCat1">---Select--</option>
+                <option value="itemCat1">---Select---</option>
                 {idListHasValue && idList[0].map((product) => (
-                 <option key={product._id}>{product._id}</option>
+                 <option key={product.product_id}>{product.product_id}</option>
                 ))}
               </select>
             </div>

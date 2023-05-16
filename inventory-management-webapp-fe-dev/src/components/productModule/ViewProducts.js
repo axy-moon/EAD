@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useState, useEffect} from 'react'
 import './addProduct.css'
 import Axios from 'axios';
 
@@ -7,9 +7,6 @@ import Sidebar from '../../commonComponents/Sidebar'
 let count=0;
 const ViewProducts = () => {
 
-  
-  // form-value
-
   const [itemCategory, setItemCategory] = useState("")
   const [itemType, setItemType] = useState("")
   const [itemId, setItemId] = useState("")
@@ -17,15 +14,52 @@ const ViewProducts = () => {
   const [product,setProduct]=useState([])
   const [idListHasValue,setIdListHasValue] = useState(false)
   const [productHasValue,setProductHasValue] = useState(false)
+  const [categoryList,setCategoryList]=useState([])
+  const [categoryListHasValue,setCategoryListHasValue] = useState(false)
+  const [typeList,setTypeList]=useState([])
+  const [typeListHasValue,setTypeListHasValue] = useState(false)
+  
+
+  useEffect(() => {
+    Axios.post("http://localhost:8000/uniqueCategory").then((res)=>{
+      var arr=res.data.category;
+      console.log('length',arr.length)
+      if(arr.length){
+        console.log(res.data.category);
+        categoryList.push(res.data.category);
+        setCategoryListHasValue(true);
+      }
+      else{
+        categoryList.length=0;
+        setCategoryListHasValue(false);
+      }
+    })
+}, []);
+
+const handleItemCategory = (e) =>{
+  e.preventDefault();
+  setItemCategory(e.target.value);
+
+  Axios.post("http://localhost:8000/getUniqueItemtype",{
+    itemcategory: itemCategory
+  }).then((res)=>{
+      var arr=res.data.item_type;
+      if(arr.length){
+        console.log(res.data.item_type);
+        typeList.push(res.data.item_type);
+        setTypeListHasValue(true);
+      }
+      else{
+        typeList.length=0;
+        setTypeListHasValue(false);
+      }
+  })
+}
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    console.log(itemCategory,itemType,itemId)
-
     Axios.post('http://localhost:8000/getItemOne',{
-            // item_category:itemCategory,
-            // item_type:itemType,
-            _id:itemId
+            product_id:itemId
             }).then(res=>{
                  var arr=res.data;
                  console.log('length',arr)
@@ -50,8 +84,6 @@ const ViewProducts = () => {
       count+=1
       console.log('countis ',count)
       if(count>=2){
-
-        
            Axios.post('http://localhost:8000/getItem',{
             item_category:itemCategory,
             item_type:itemType
@@ -66,7 +98,6 @@ const ViewProducts = () => {
                   idList.length=0
                   setIdListHasValue(false)
                  }
-                 
                  console.log('idlist',idList.length)
                  console.log(res.data.product)
                  console.log(idList);
@@ -76,7 +107,7 @@ const ViewProducts = () => {
 
     return(
         <>
-            <div className="container-addProduct">
+        <div className="container-addProduct">
         <form>
           
         <div className="right-addProduct">
@@ -86,12 +117,20 @@ const ViewProducts = () => {
             <div className="col25">
               <label htmlFor="itemCategory">Item Category</label>
             </div>
-            <div className="col75">
+            {/* <div className="col75">
               <select id="itemCategory" name="itemCategory" onInput={(e)=>setItemCategory(e.target.value)} onChange={countSubmit}>
               <option value="default">--Select--</option>
                 <option value="Stationary">Stationary</option>
                 <option value="Toys">Toys</option>
                 <option value="Gift Items">Gift Items</option>
+              </select>
+            </div> */}
+            <div className="col75">
+              <select id="itemCategory" name="itemCategory"  onInput={handleItemCategory}>
+                <option value="default">---Select---</option>
+                {categoryListHasValue && categoryList[0].map((category) => (
+                 <option key={category}>{category}</option>
+                ))}
               </select>
             </div>
           </div>
@@ -100,7 +139,7 @@ const ViewProducts = () => {
             <div className="col25">
               <label htmlFor="itemType">Item Type</label>
             </div>
-            <div className="col75">
+            {/* <div className="col75">
               <select id="itemType" name="itemType" onInput={(e)=>setItemType(e.target.value)} onChange={countSubmit} >
               <option value="default">--Select--</option>
                 <option value="Pen">Pen</option>
@@ -113,6 +152,14 @@ const ViewProducts = () => {
                 <option value="Photo Frames">Photo Frames</option>
                 <option value="Glass Products">Glass Products</option>
                 <option value="Coffee Mugs">Coffee Mugs</option>
+              </select>
+            </div> */}
+            <div className="col75">
+              <select id="itemType" name="itemType"  onChange={(e)=>setItemType(e.target.value)}>
+                <option value="default">---Select---</option>
+                {typeListHasValue && typeList[0].map((item_type) => (
+                 <option key={item_type}>{item_type}</option>
+                ))}
               </select>
             </div>
           </div>
@@ -142,7 +189,7 @@ const ViewProducts = () => {
       ))} */}
 
       {idListHasValue && idList[0].map((product) => (
-        <option key={product._id}>{product._id}</option>
+        <option key={product.product_id}>{product.product_id}</option>
       ))}
                 
                 

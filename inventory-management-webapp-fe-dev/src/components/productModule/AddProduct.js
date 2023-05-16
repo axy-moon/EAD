@@ -134,8 +134,7 @@ const AddProduct = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(itemCategory,itemType,purchaseCost,quantity,totalCost,notes,depositAmount,salesPrice);
-    
+        
     if(rentCheckbox == true && salesCheckbox == true){
       Axios({
         method:"post",

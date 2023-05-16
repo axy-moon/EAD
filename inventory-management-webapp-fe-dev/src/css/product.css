@@ -1,0 +1,102 @@
+.addProd {
+    background-color: rgba(143, 143, 143, 0.35);
+    margin: 1px;
+    border-radius: 8px;
+
+}
+
+.ap-grid {
+    display: flex;
+    gap: 40px;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-left: 100px;
+    height: 90vh;
+    width: 92vw; 
+}
+
+h1 {
+    text-align: left;
+    padding-bottom: 30px;
+    margin-left: 100px;
+}
+.p-inputgroup {
+    margin-bottom: 20px;
+}
+
+.p-inputgroup input {
+    height: 40px;
+}
+
+.p-inputgroup span {
+    height: 40px;
+}
+
+.dp {
+    width: 100%;
+}
+
+.gicon {
+    height: 16px;
+    width: 16px;
+    padding-top: 8px;
+    color: #565454;
+}
+
+.p-inputgroup-check {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.p-checkbox {
+    margin: 10px;
+}
+
+.bt-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.bflex {
+    display: flex;
+    gap: 100px;
+}
+
+.fbtns {
+    display: flex;
+    gap: 18px;
+    margin-top: 10px;
+}
+
+.p-button {
+    height: 38px;
+}
+
+.top {
+    display: flex;
+    justify-content: space-between;
+    width: 75vw;
+}
+
+.p-fileupload {
+    position: absolute;
+    top: 100;
+    left: 60%;
+}	
+
+.p-fileupload-buttonbar button {
+    background-color: red;
+}
+
+.image-card {
+    width: 40%;
+    margin: auto;
+}
+
+.dialog-span {
+    display: flex;
+    flex-direction: column;
+    font-weight: 500;
+    line-height: 1.8;
+}

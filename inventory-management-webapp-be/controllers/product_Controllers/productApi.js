@@ -19,7 +19,7 @@ const addProduct = async(req,res)=>{
 
 const getProductOne=async(req,res)=>{
     console.log(req.body);
-    const product = await productSchema.findOne({_id:req.body._id});
+    const product = await productSchema.findOne({product_id:req.body.product_id});
     if(product){
         res.json({
             product
