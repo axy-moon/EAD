@@ -13,7 +13,10 @@ const SalesOrder = () => {
   const [itemType, setItemType] = useState("")
   const [itemId, setItemId] = useState("")
   const [availableQuantity, setAvailableQuantity] = useState("")
-  const [addQuantity, setAddQuantity] = useState("")
+  const [stock, setStock] = useState("")
+  const [customerName, setCustomerName] = useState("")
+  const [customerAddress, setCustomerAddress] = useState("")
+  const [phoneNumber, setPhoneNumber] = useState("")
 
 
 
@@ -28,19 +31,21 @@ const SalesOrder = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    console.log(itemCategory,itemType,itemId,availableQuantity,addQuantity)
+    console.log(itemCategory,itemType,itemId,availableQuantity,stock,customerName,customerAddress,phoneNumber)
 
-    alert("Item Details Updated successfully")
+    alert("Your order has been placed Successfully")
   }
 
 
     return(
         <>
             <div className="container-addProduct">
-        <form>
-          
+        <form> 
         <div className="right-addProduct">
           <h2>Sales Order</h2>
+          <br></br>
+          <h3>Product Details</h3>
+          
           <div className="row">
             <div className="col25">
               <label htmlFor="itemCategory">Item Category</label>
@@ -91,20 +96,49 @@ const SalesOrder = () => {
 
           <div className="row">
             <div className="col25">
-              <label htmlFor="addQuantity">Add Quantity</label>
+              <label htmlFor="stock">Stock</label>
             </div>
             <div className="col75">
-              <input type="text" id="addQuantity" name="addQuantity" onInput={(e)=>setAddQuantity(e.target.value)}/>
+              <input type="text" id="stock" name="stock" onInput={(e)=>setStock(e.target.value)}/>
             </div>
           </div>
 
+          {/* ------------------Customer Details---------------------------- */}
+
+          <h3>Customer Details</h3>
+          <div className="row">
+            <div className="col25">
+              <label htmlFor="customerName">Customer Name</label>
+            </div>
+            <div className="col75">
+              <input type="text" id="customerName" name="customerName" onInput={(e)=>setCustomerName(e.target.value)}/>
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col25">
+              <label htmlFor="customerAddress">Customer Address</label>
+            </div>
+            <div className="col75">
+              <input type="text" id="customerAddress" name="customerAddress" onInput={(e)=>setCustomerAddress(e.target.value)}/>
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col25">
+              <label htmlFor="phoneNumber">Phone Number</label>
+            </div>
+            <div className="col75">
+              <input type="text" id="phoneNumber" name="phoneNumber" onInput={(e)=>setPhoneNumber(e.target.value)}/>
+            </div>
+          </div>
           
             <div className="row">
               <div className="col50">
                <input type="button" className="addProduct-btns" name="cancel" value="CANCEL" />
             </div>
             <div className="col50">
-              <button className="addProduct-btns" onClick={handleSubmit}>ADD QUANTITY</button>
+              <button className="addProduct-btns" onClick={handleSubmit}>ORDER</button>
             </div>
             </div>
         </div> 

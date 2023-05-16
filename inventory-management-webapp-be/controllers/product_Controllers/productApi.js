@@ -128,6 +128,31 @@ const getQuantity=async(req,res)=>{
         }
 }
 
+const uniqueCategory=async(req,res)=>{
+    const category=await productSchema.distinct("item_category");
+    if(category){
+        res.json({
+            category
+        })
+    }
+}
+
+const uniqueItemtype=async(req,res)=>{
+    const data=await productSchema.find({item_category:req.body.itemcategory})
+    let desired_output = (data) => {
+        let unique_values =data
+            .map((item) => item.item_type)
+            .filter(
+                (value, index, current_value) => current_value.indexOf(value) === index
+            );
+        return unique_values;
+    };
+    const item_type=desired_output(data);
+    res.json({
+         item_type
+    })
+}
+
 
 module.exports={
     addProduct,
@@ -136,5 +161,7 @@ module.exports={
     getAllProduct,
     updateItem,
     getQuantity,
-    getProductOne
+    getProductOne,
+    uniqueCategory,
+    uniqueItemtype
 }

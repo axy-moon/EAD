@@ -141,7 +141,7 @@ const getData=(e)=>{
             </div>
             <div className="col75">
               <select id="itemId" name="itemId" onInput={(e)=>setItemId(e.target.value)} onChange={getData}>
-                <option value="itemCat1">---select--</option>
+                <option value="itemCat1">---Select--</option>
                 {idListHasValue && idList[0].map((product) => (
                  <option key={product._id}>{product._id}</option>
                 ))}
