@@ -1,9 +1,13 @@
 const express = require('express');
 
-const {orderDetails}=require('../../controllers/order_Controllers/orderApi');
+const {orderDetails, updateStock, rentOrderDetails}=require('../../controllers/order_Controllers/orderApi');
 
 const router = express.Router();
 
-router.get('/orderDetails',orderDetails);
+router.post('/orderDetails',orderDetails);
+
+router.post('/rentOrderDetails',rentOrderDetails);
+
+router.post('/updateStock', updateStock);
 
 module.exports = router;

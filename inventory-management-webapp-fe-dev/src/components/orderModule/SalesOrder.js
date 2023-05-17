@@ -5,10 +5,6 @@ import Header  from '../../commonComponents/Header'
 import Sidebar from '../../commonComponents/Sidebar'
 
 const SalesOrder = () => {
-
-
-  // form-value
-
   const [itemCategory, setItemCategory] = useState("")
   const [itemType, setItemType] = useState("")
   const [itemId, setItemId] = useState("")

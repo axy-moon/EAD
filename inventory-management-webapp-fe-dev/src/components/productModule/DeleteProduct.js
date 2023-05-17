@@ -9,9 +9,6 @@ import Sidebar from '../../commonComponents/Sidebar'
 let count=0;
 const DeleteProduct = () => {
 
-
-  // form-value
-
   const [itemCategory, setItemCategory] = useState("")
   const [itemType, setItemType] = useState("")
   const [itemId, setItemId] = useState("")
@@ -128,7 +125,6 @@ const handleItemCategory = (e) =>{
 
     //alert("Product deleted successfully")
   }
-
 
     return(
         <>

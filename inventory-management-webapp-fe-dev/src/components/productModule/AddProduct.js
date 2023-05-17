@@ -29,7 +29,8 @@ const AddProduct = () => {
   }, []);
 
   const showSuccess = () => {
-      toast.current.show({severity:'success', summary: 'Success', detail:'Product Details Inserted Successfully', life: 2000});
+      toast.current.show({severity:'success', summary: 'Success', 
+      detail:'Product Details Inserted Successfully', life: 2000});
   }
 
   // rent or sales options (checkbox)

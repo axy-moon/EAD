@@ -114,7 +114,7 @@ const updateItem=async(req,res)=>{
 const getQuantity=async(req,res)=>{
     console.log(req.body.item_category);
     console.log(req.body.item_type);
-    const product = await productSchema.find({item_category:req.body.item_category,item_type:req.body.item_type,_id:req.body._id}).select("quantity");
+    const product = await productSchema.find({item_category:req.body.item_category,item_type:req.body.item_type,product_id:req.body.product_id}).select("quantity");
     console.log(product)
     if(product){
         res.json({
