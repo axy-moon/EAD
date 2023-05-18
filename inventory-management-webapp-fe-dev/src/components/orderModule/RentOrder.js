@@ -1,274 +1,347 @@
-import React,{useState, useEffect} from 'react'
-import '../productModule/addProduct.css'
-import Axios from 'axios'
+/* 
+  --> quantity check sale order and rent order
+*/
 
+
+import React from "react";
+import { useState,useRef,useEffect } from "react";
+import { InputText } from 'primereact/inputtext';
+import { InputNumber } from 'primereact/inputnumber';
+
+import { Dropdown } from 'primereact/dropdown';
+import { Button } from 'primereact/button';
+import { InputTextarea } from 'primereact/inputtextarea';
+import { Checkbox } from "primereact/checkbox";
+import { Dialog } from 'primereact/dialog';
+import Axios from "axios";
+import { Calendar } from 'primereact/calendar';
+
+import { Toast } from 'primereact/toast';
+
+import "primereact/resources/themes/tailwind-light/theme.css"; 
+import '../../css/product.css'
 
 const RentOrder = () => {
+    const toast = useRef(null);
 
-  const [itemCategory, setItemCategory] = useState("")
-  const [itemType, setItemType] = useState("")
-  const [itemId, setItemId] = useState("")
-  const [availableQuantity, setAvailableQuantity] = useState("")
-  const [requiredQuantity, setRequiredQuantity] = useState("");
-  const [fromDate, setFromDate] = useState("")
-  const [toDate, setToDate] = useState("")
-  const [customerName, setCustomerName] = useState("")
-  const [customerAddress, setCustomerAddress] = useState("")
-  const [phoneNumber, setPhoneNumber] = useState("")
-  const [rentPerDay, setRentPerDay] = useState("")
-  const [advanceAmount, setAdvanceAmount] = useState("")
-  const [categoryList,setCategoryList]=useState([])
-  const [categoryListHasValue,setCategoryListHasValue] = useState(false)
-  const [typeList,setTypeList]=useState([])
-  const [typeListHasValue,setTypeListHasValue] = useState(false)
-  const [idList,setIdList]=useState([])
-  const [idListHasValue,setIdListHasValue] = useState(false)
-  const [buttondisabled,setbuttondisabled]=useState(true)
+    const showSuccess = () => {
+        toast.current.show({severity:'success', summary: 'Success', detail:'Rent Order Details Inserted Successfully', life: 2000});
+    }
+    const [selectedCat, setSelectedCat] = useState(null);
+    const [visible, setVisible] = useState(false);
+    const [totalCost,setTotalCost] = useState('');
+    const [categoryList,setCategoryList] = useState([]);
+    const [categoryListHasValue,setCategoryListHasValue] = useState(false)
+    const [typeList,setTypeList]=useState([])
+    const [typeListHasValue,setTypeListHasValue] = useState(false)
 
+    const [fromdate,setFromDate] = useState();
+    const [todate,setToDate] = useState();
+    const [rentPerDay,setRentPerDay] = useState();
+    const [customername,setCustomerName] = useState();
+    const [customeraddress,setCustomerAddress] = useState();
+    const [phonenumber,setPhoneNumber] = useState();
+    const [payment,setPayment] = useState();
+
+    const [selectedType, setSelectedType] = useState(null);
+    const [availableQuantity, setAvailableQuantity] = useState("")
+
+    const [CategoryOther,setCategoryOther] = useState(false);
+    const [ItemTypeOther,setItemTypeOther] = useState(false);
+
+    const [itemId, setItemId] = useState(null)
+    const [idList,setIdList]=useState([])
+    const [idListHasValue,setIdListHasValue] = useState(false)
+    const [buttondisabled,setbuttondisabled]=useState(true)
+
+    useEffect(() => {
+      Axios.post("http://localhost:8000/uniqueCategory").then((res)=>{
+        var arr=res.data.category;
+        console.log('length',arr.length)
+        if(arr.length){
+          console.log(res.data.category);
+          //categoryList.push(res.data.category);
+          setCategoryList(res.data.category);
+          setCategoryListHasValue(true);
+          handleCategory()
+        }
+        else{
+          categoryList.length=0;
+          setCategoryListHasValue(false);
+        }
+      })
+  }, [selectedCat]);
+
+  var itemList = new Array();
   useEffect(() => {
-    Axios.post("http://localhost:8000/uniqueCategory").then((res)=>{
-      var arr=res.data.category;
-      console.log('length',arr.length)
-      if(arr.length){
-        console.log(res.data.category);
-        categoryList.push(res.data.category);
-        setCategoryListHasValue(true);
-        handleCategory();
-      }
-      else{
-        categoryList.length=0;
-        setCategoryListHasValue(false);
-      }
-    })
-}, [itemCategory]);
+      Axios.post('http://localhost:8000/getItem',{
+          item_category:selectedCat,
+          item_type:selectedType,
+          }).then(res=>{
+            var arr=res.data.product;
+            console.log('length',arr.length)
+           if(arr.length){
+             //idList.push(res.data.product)
+             console.log("Array",arr[0].product_id)
+             for(var i=0;i<arr.length;i++)
+                  itemList.push(arr[i].product_id);
+              console.log("New Array",itemList);
+             setIdList(itemList)
+             console.log("Ids",idList )
+             setIdListHasValue(true)
+            }
+            else{
+             idList.length=0
+             setIdListHasValue(false)
+            } 
+        })
+    }, [selectedType]);
 
-const handleCategory = ()=>{
-  Axios.post("http://localhost:8000/getUniqueItemtype",{
-    itemcategory: itemCategory
-  }).then((res)=>{
-      var arr=res.data.item_type;
-      if(arr.length){
-        console.log(res.data.item_type);
-        typeList.length=0;
-        typeList.push(res.data.item_type);
-        console.log("Type List :"+typeList);
-        setTypeListHasValue(true);
-      }
-      else{
-        typeList.length=0;
-        setTypeListHasValue(false);
-      }
-  })
-}
+/*     useEffect(() => {
+      console.log("Updated selectedItem:", itemId);
+      Axios.post('http://localhost:8000/getQuantity',{
+        item_category:selectedCat,
+        item_type:selectedType,
+        itemId:itemId
+      }).then(res=>{
+          console.log("Product qty: ",res.data.product)
+         setAvailableQuantity(res.data.product)
+         if(res.data.product[0].quantity!=0){
+              setbuttondisabled(true)
+         }
+         else{
+          setbuttondisabled(false)
+         }
+      })
+     
+    }, [itemId]); */
 
-const getData=(e)=>{
-  Axios.post('http://localhost:8000/getQuantity',{
-    item_category:itemCategory,
-    item_type:itemType,
-    product_id:itemId
-  }).then(res=>{
-     setAvailableQuantity(res.data.product[0].quantity)
-     alert("Quantity",res.data.product.quantity)
-     if(res.data.product[0].quantity!=0){
-          setbuttondisabled(true)
-          alert(buttondisabled)
-     }
-     else{
-      setbuttondisabled(false)
-      alert(buttondisabled)
-     }
-  })
-}
+    useEffect(() => {
+        console.log("Updated selectedItem:", itemId);
+        console.log("Select Item | Selected Cat | ITem ID ",selectedCat,selectedType,itemId)
+        Axios.post('http://localhost:8000/getQuantity',{
+          item_category:selectedCat,
+          item_type:selectedType,
+          product_id:itemId
+        }).then(res=>{
+            console.log("Product qty: ",res.data.product)
+           setAvailableQuantity(res.data.product[0].quantity)
+           if(res.data.product[0].quantity!=0){
+                setbuttondisabled(true)
+           }
+           else{
+            setbuttondisabled(false)
+           }
+        })
+       
+      }, [itemId]);
+
+  const getData=(e)=>{
+      setItemId(e.target.value)
+      console.log("Set Item ID: ",itemId);
+    }
 
 
-  // const handleUploadImage = (e) =>
-  // {
-  //   e.preventDefault()
-  //   const imgEle = document.getElementById('output')
-  //   imgEle.src = e.target.value;
-  //   console.log(e.target.value)
-  //   console.log(imgEle)
-  // }
 
-  const handleSubmit = (e) => {
-    
-    console.log(itemCategory,itemType,itemId,availableQuantity,fromDate,toDate,customerName,customerAddress,phoneNumber)
+  const handleCategory = () =>{
+      Axios.post("http://localhost:8000/getUniqueItemtype",{
+          itemcategory: selectedCat
+        }).then((res)=>{
+            var arr=res.data.item_type;
+            if(arr.length){
+              console.log(res.data.item_type);
+              //typeList.push(res.data.item_type);
+              setTypeList(res.data.item_type)
+              setTypeListHasValue(true);
+            }
+            else{
+              typeList.length=0;
+              setTypeListHasValue(false);
+            }
+          })
+            console.log(selectedType)
+          }
 
-    alert("Availability,Rent Per day: ",availableQuantity,rentPerDay)
-  }
+    //Form Values
+    const [quantity,setQuantity] = useState('');
+    const [productID,setProductID] = useState('');
+
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        setVisible(false)
+        showSuccess()
+        console.log(selectedCat)
+        console.log(selectedType)
+        Axios.post("http://localhost:8000/rentOrderDetails",{
+          item_category:selectedCat,
+          item_type:selectedType,
+          product_id:itemId,
+          requiredQuantity:quantity,
+          fromDate:fromdate,
+          toDate:todate,
+          rentPerDay:rentPerDay,
+          customer_name:customername,
+          customer_address:customeraddress,
+          phone_number:phonenumber,
+          advanceAmount:payment
+        }).then((res)=>{
+          console.log(res);
+        })
+    }
+
+    const popup =(e)=> {
+        e.preventDefault()
+        console.log(customername,customeraddress,phonenumber,payment)
+        setVisible(true)
+    }
+
+    const clearForm = () => {
+        setSelectedCat(null);
+        setSelectedType(null);
+        setProductID('');
+        setQuantity('');
+    }
+
+    const footerContent = (
+        <div>
+            <Button label="No" icon="pi pi-times" onClick={() => setVisible(false)} className="p-button-text" />
+            <Button label="Yes" icon="pi pi-check" onClick={handleSubmit} autoFocus />
+        </div>
+    );
+
+
 
     return(
-        <>
-        <div className="container-addProduct">
-        <form> 
-        <div className="right-addProduct">
-          <h2>Rent Order</h2>
-          <br></br>
-          <h3>Product Details</h3>
-          
-          <div className="row">
-            <div className="col25">
-              <label htmlFor="itemCategory">Item Category</label>
-            </div>
-            {/* <div className="col75">
-              <select id="itemCategory" name="itemCategory" onInput={(e)=>setItemCategory(e.target.value)}>
-                <option value="itemCat1">itemCat1</option>
-                <option value="itemCat2">itemCat2</option>
-                <option value="itemCat3">itemCat3</option>
-              </select>
-            </div> */}
-            <div className="col75">
-              <select id="itemCategory" name="itemCategory"  onChange={(e)=>setItemCategory(e.target.value)}>
-                <option value="default">---Select---</option>
-                {categoryListHasValue && categoryList[0].map((category) => (
-                 <option key={category}>{category}</option>
-                ))}
-              </select>
-            </div>
-          </div>
 
-          <div className="row">
-            <div className="col25">
-              <label htmlFor="itemType">Item Type</label>
-            </div>
-            {/* <div className="col75">
-              <select id="itemType" name="itemType" onInput={(e)=>setItemType(e.target.value)}>
-                <option value="itemType1">itemType1</option>
-                <option value="itemType2">itemType2</option>
-                <option value="itemType3">itemType3</option>
-              </select>
-            </div> */}
-            <div className="col75">
-              <select id="itemType" name="itemType"  onInput={(e)=>setItemType(e.target.value)}>
-                <option value="default">---Select---</option>
-                {typeListHasValue && typeList[0].map((item_type) => (
-                 <option key={item_type}>{item_type}</option>
-                ))}
-              </select>
-            </div>
-          </div>
+        <div className="addprod">
+        <Toast ref={toast} />
 
-          <div className="row">
-            <div className="col25">
-              <label htmlFor="itemId">Item Id</label>
-            </div>
-            <div className="col75">
-              <select id="itemId" name="itemId" onInput={(e)=>setItemId(e.target.value)} onChange={getData}>
-                <option value="itemCat1">---Select---</option>
-                {idListHasValue && idList[0].map((product) => (
-                 <option key={product.product_id}>{product.product_id}</option>
-                ))}
-              </select>
-            </div>
-          </div>
+        <h1>Rent Product</h1>
+        <form>
+        <div className="ap-grid">
+        <div className="card flex flex-column md:flex-row top gap-3">
 
-          <div className="row">
-            <div className="col25">
-              <label htmlFor="aQuantity">Available Quantity</label>
+        <div className="bsform">
+            <div className="flex-1 p-inputgroup">
+                <Dropdown value={selectedCat}  onChange={(e)=>setSelectedCat(e.target.value)} options={categoryList}
+                    placeholder="Select a Category" className="dp"/>
             </div>
-            <div className="col75">
-              <input type="text" id="aQuantity" name="aQuantity" value={availableQuantity} disabled />
-            </div>
-          </div>
 
-          <div className="row">
-            <div className="col25">
-              <label htmlFor="aQuantity">Required Quantity</label>
-            </div>
-            <div className="col75">
-              <input type="text" id="rQuantity" name="rQuantity" onInput={(e)=>setRequiredQuantity(e.target.value)} />
-            </div>
-          </div>
+            
+            <div className="flex-1 p-inputgroup">
+            <Dropdown value={selectedType}  onChange={(e)=>setSelectedType(e.target.value)} options={typeList} placeholder="Select a Type" className="dp"/>
+             </div>
 
-          <div className="row">
-            <div className="col25">
-              <label htmlFor="date">From Date</label>
+             <div className="p-inputgroup flex-1">
+             <span className="p-inputgroup-addon">
+                    <i className="pi pi-hashtag"></i>
+                </span>
+                <Dropdown placeholder="Product ID" value={itemId}  onChange={getData} options={idList} />
             </div>
-            <div className="col75">
-              <input type="text" id="date" name="date" onInput={(e)=>setFromDate(e.target.value)}/>
-            </div>
-          </div>
 
-          <div className="row">
-            <div className="col25">
-              <label htmlFor="date">To Date</label>
+             <div className="p-inputgroup flex-1">
+                <span className="p-inputgroup-addon">
+                <span class="material-symbols-outlined gicon">payments</span>
+                </span>
+                <InputText disabled placeholder="Available Quantity" value={availableQuantity} required />
             </div>
-            <div className="col75">
-              <input type="text" id="date" name="date" onInput={(e)=>setToDate(e.target.value)}/>
-            </div>
-          </div>
 
-          <div className="row">
-            <div className="col25">
-              <label htmlFor="rentPerDay">Rent per Day</label>
+            <div className="p-inputgroup flex-1">
+            <span className="p-inputgroup-addon">
+                    <i className="pi pi-angle-double-right"></i>
+                </span>
+                <InputText placeholder="Required Quantity" onInput={(e)=>setQuantity(e.target.value)}  />
             </div>
-            <div className="col75">
-              <input type="text" id="rentPerDay" name="rentPerDay" onInput={(e)=>setRentPerDay(e.target.value)} />
-            </div>
-          </div>
 
-          {/* ------------------Customer Details---------------------------- */}
+            <div className="p-inputgroup flex-1">
+                <span className="p-inputgroup-addon">
+                <span class="material-symbols-outlined gicon">payments</span>
+                </span>
+                <Calendar value={todate} placeholder="From Date" onChange={(e) => setToDate(e.value)} />
+            </div>
 
-          <h3>Customer Details</h3>
-          <div className="row">
-            <div className="col25">
-              <label htmlFor="customerName">Customer Name</label>
+            <div className="p-inputgroup flex-1">
+                <span className="p-inputgroup-addon">
+                <span class="material-symbols-outlined gicon">payments</span>
+                </span>
+                <Calendar value={fromdate} placeholder="To Date" onChange={(e) => setFromDate(e.value)} />
             </div>
-            <div className="col75">
-              <input type="text" id="customerName" name="customerName" onInput={(e)=>setCustomerName(e.target.value)}/>
-            </div>
-          </div>
 
-          <div className="row">
-            <div className="col25">
-              <label htmlFor="customerAddress">Customer Address</label>
-            </div>
-            <div className="col75">
-              <input type="text" id="customerAddress" name="customerAddress" onInput={(e)=>setCustomerAddress(e.target.value)}/>
-            </div>
-          </div>
+            
 
-          <div className="row">
-            <div className="col25">
-              <label htmlFor="phoneNumber">Phone Number</label>
+            <div className="p-inputgroup flex-1">
+            <span className="p-inputgroup-addon">
+                    <i className="pi pi-angle-double-right"></i>
+                </span>
+                <InputText placeholder="Rent Per Day" onInput={(e)=>setRentPerDay(e.target.value)}  />
             </div>
-            <div className="col75">
-              <input type="text" id="phoneNumber" name="phoneNumber" onInput={(e)=>setPhoneNumber(e.target.value)}/>
-            </div>
-          </div>
 
-          {/* ------------------Payment Details---------------------------- */}
+            <h1>Customer Details</h1>
 
-          <h3>Payment Details</h3>
-          <div className="row">
-            <div className="col25">
-              <label htmlFor="advanceAmount">Initial Advance Deposit Amount</label>
+            <div className="p-inputgroup flex-1">
+            <span className="p-inputgroup-addon">
+                    <i className="pi pi-angle-double-right"></i>
+                </span>
+                <InputText placeholder="Customer Name" onInput={(e)=>setCustomerName(e.target.value)}  />
             </div>
-            <div className="col75">
-              <input type="text" id="advanceAmount" name="advanceAmount" onInput={(e)=>setAdvanceAmount(e.target.value)}/>
-            </div>
-          </div>
-          
-            <div className="row">
-              <div className="col50">
-               <input type="reset" className="addProduct-btns" name="cancel" value="CANCEL" />
-            </div>
-            <div className="col50">
-              <button className="addProduct-btns" onClick={handleSubmit}>DONE</button>
-            </div>
-            </div>
-        </div> 
-        
-        {/* <div className="image-upload">
-                <p><input type="file"  accept="image/*" name="image" id="file" onChange={handleUploadImage}/></p>
-                <p><label htmlFor="file">Upload Image</label></p>
-                <p><img id="output" width="200" style={{background:"blue"}}/></p>
-        </div>   */}
 
-        </form>
+            <div className="p-inputgroup flex-1">
+            <span className="p-inputgroup-addon">
+                    <i className="pi pi-angle-double-right"></i>
+                </span>
+                <InputText placeholder="Customer Address" onInput={(e)=>setCustomerAddress(e.target.value)}  />
+            </div>
+
+            <div className="p-inputgroup flex-1">
+            <span className="p-inputgroup-addon">
+                    <i className="pi pi-angle-double-right"></i>
+                </span>
+                <InputText placeholder="Phone Number" onInput={(e)=>setPhoneNumber(e.target.value)}  />
+            </div>
+            
+
+            <h1>Payment Details</h1>
+
+            <div className="p-inputgroup flex-1">
+            <span className="p-inputgroup-addon">
+                    <i className="pi pi-angle-double-right"></i>
+                </span>
+                <InputText placeholder="Initial Deposit Amount" onInput={(e)=>setPayment(e.target.value)}  />
+            </div>            
+
+            <div className="fbtns">
+                    <Button label="Cancel" severity="danger" raised icon="pi pi-times" onClick={clearForm} />
+                    <Button label="Add" raised severity="success" icon="pi pi-check" onClick={popup}  />
+            </div>
+
+            </div>
+            <div className="image-up">
+            {/* <ImageUploader/> */}
+            </div>
+            </div>
+            
+
+              <Dialog header="Product Details" visible={visible} style={{ width: '50vw' }} onHide={() => setVisible(false)} footer={footerContent}>
+                <div className="dialog-span">
+                    <span>Product ID: {itemId}</span>
+                    <span>Quantity : {quantity}</span> 
+                    <span> Deposit Amount : {payment} </span>
+                </div>
+            </Dialog> 
+
+            
+
         </div>
-        </>
+
+        {/* <div className="card flex flex-wrap justify-content-center gap-3">
+        <Button label="Add Product" icon="pi pi-plus"/>
+        
+        </div>
+ */}
+        </form>
+        </div   >
     );
 }
 
-export default RentOrder
+export default RentOrder;

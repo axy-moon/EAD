@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from '../commonComponents/Button';
 import Axios from "axios";
-import { Toast } from 'primereact/toast';
 
 //routing
 import {useParams} from 'react-router-dom'
@@ -16,7 +15,6 @@ import '../css/login.css';
 var linkValidity;
 
 const SetPassword = () => {
-    const toast = useRef(null);
 
     const param = useParams();
 
@@ -28,27 +26,17 @@ const SetPassword = () => {
 
     function check(){
 
-        const showNouser = () => {
-            toast.current.show({severity:'error', summary: 'Error', detail:'No Such User Found !!!', life: 5000});
-        }
-        const showAlreadySetPassword = () => {
-            toast.current.show({severity:'error', summary: 'Error', detail:'Already Set your Password !!!', life: 5000});
-        }
-        const showLinkExpired = () => {
-            toast.current.show({severity:'error', summary: 'Error', detail:'Link Expired !!!', life: 5000});
-        }
-
         if(linkValidity=="No user found"){
+            alert("No user found");
             setIsReadOnly(true);
-            showNouser();
         }
         else if(linkValidity=="Already Set your password"){
-            setIsReadOnly(true);
-            showAlreadySetPassword();
+              alert("Already Set your password");
+              setIsReadOnly(true);
         }
         else if(linkValidity=="Link Expired"){
+            alert("Link Expired");
             setIsReadOnly(true);
-            showLinkExpired();
         } 
         else{
             setIsReadOnly(false);
@@ -69,6 +57,8 @@ const SetPassword = () => {
             console.log('data is',linkValidity);
             check();
         })
+        
+        
     },[]);
 
     const [password1,setPassword1] = useState('');
@@ -107,7 +97,6 @@ const SetPassword = () => {
                 <h1 id="login-logo">logo</h1>
             </div>
             <div className="right">
-            <Toast ref={toast}/>
                 <form onSubmit={handleSubmit} className="CreateAccountForm" id="CreateAccountForm">
                 <div className="input-group">
                     <h1>Create Account</h1>

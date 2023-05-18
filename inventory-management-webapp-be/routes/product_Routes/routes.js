@@ -1,6 +1,6 @@
 const express=require('express');
 
-const {addProduct,getProduct,deleteProduct, getAllProduct, updateItem, getQuantity, getProductOne, uniqueCategory, uniqueItemtype}=require('../../controllers/product_Controllers/productApi');
+const {addProduct,getProduct,deleteProduct, getAllProduct, updateItem, getQuantity, getProductOne, uniqueCategory, uniqueItemtype,genId}=require('../../controllers/product_Controllers/productApi');
 
 const router=express.Router();
 
@@ -21,5 +21,8 @@ router.post('/getQuantity',getQuantity);
 router.post('/uniqueCategory',uniqueCategory)
 
 router.post('/getUniqueItemtype',uniqueItemtype);
+
+router.post('/genId',genId);
+
 
 module.exports=router;

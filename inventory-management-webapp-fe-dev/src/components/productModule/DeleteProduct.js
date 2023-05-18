@@ -1,233 +1,177 @@
-import React,{useState, useEffect} from 'react'
-import './addProduct.css';
+import React from "react";
+import { useState,useRef,useEffect } from "react";
+import { InputText } from 'primereact/inputtext';
+import { InputNumber } from 'primereact/inputnumber';
+import { Dropdown } from 'primereact/dropdown';
+import { Button } from 'primereact/button';
+import { InputTextarea } from 'primereact/inputtextarea';
+import { Checkbox } from "primereact/checkbox";
+import { Dialog } from 'primereact/dialog';
+import Axios from "axios";
 
-import Axios from 'axios'
-import Header  from '../../commonComponents/Header'
-import Sidebar from '../../commonComponents/Sidebar'
+import { Toast } from 'primereact/toast';
 
+import "primereact/resources/themes/tailwind-light/theme.css"; 
+import '../../css/product.css'
 
-let count=0;
 const DeleteProduct = () => {
+    const toast = useRef(null);
+    let count = 0;
+    const showSuccess = () => {
+        toast.current.show({severity:'info', summary: 'Info', detail:'Product Deleted Successfully', life: 2000});
+    }
+    const showFailure = () => {
+        toast.current.show({severity:'error', summary: 'Error', detail:'Invalid Quantity', life: 2000});
+    }
 
-  const [itemCategory, setItemCategory] = useState("")
-  const [itemType, setItemType] = useState("")
-  const [itemId, setItemId] = useState("")
-  const [availableQuantity, setAvailableQuantity] = useState("")
-  const [idList,setIdList]=useState([])
-  const [idListHasValue,setIdListHasValue] = useState(false)
-  const [buttondisabled,setbuttondisabled]=useState(true)
-  const [categoryList,setCategoryList]=useState([])
-  const [categoryListHasValue,setCategoryListHasValue] = useState(false)
-  const [typeList,setTypeList]=useState([])
-  const [typeListHasValue,setTypeListHasValue] = useState(false)
+    const [selectedCat, setSelectedCat] = useState(null);
+    const [visible, setVisible] = useState(false);
+    const [categoryList,setCategoryList] = useState([]);
+    const [typeList,setTypeList]=useState([])
+    const [itemId, setItemId] = useState("")
+    const [idList,setIdList]=useState([])
+    const [productHasValue,setProductHasValue] = useState(false)
+    const [product,setProduct]=useState([])
 
-  useEffect(() => {
-    Axios.post("http://localhost:8000/uniqueCategory").then((res)=>{
-      var arr=res.data.category;
-      console.log('length',arr.length)
-      if(arr.length){
-        console.log(res.data.category);
-        categoryList.push(res.data.category);
-        setCategoryListHasValue(true);
-      }
-      else{
-        categoryList.length=0;
-        setCategoryListHasValue(false);
-      }
-    })
-}, []);
-
-
-  const handleUploadImage = (e) =>
-  {
-    e.preventDefault()
-    const imgEle = document.getElementById('output')
-    imgEle.src = e.target.value;
-    console.log(e.target.value)
-    console.log(imgEle)
-  }
-
-  const countSubmit=(e)=>{
     
-    count+=1
-    console.log('countis ',count)
-    if(count>=2){
+    const [selectedType, setSelectedType] = useState(null);
+    
 
-      
-         Axios.post('http://localhost:8000/getItem',{
-          item_category:itemCategory,
-          item_type:itemType
-          }).then(res=>{
-            var arr=res.data.product;
-            console.log('length',arr.length)
-           if(arr.length){
-             idList.push(res.data.product)
-             setAvailableQuantity(res.data.product.quantity)
-             setIdListHasValue(true)
-            }
-            else{
-             idList.length=0
-             setIdListHasValue(false)
-            }
-            
+    //Form Values
+    const [addQuantity, setAddQuantity] = useState("")
+    const [productID,setProductID] = useState('');
+
+    useEffect(() => {
+        Axios.post("http://localhost:8000/uniqueCategory").then((res)=>{
+          var arr=res.data.category;
+          console.log('length',arr.length)
+          if(arr.length){
+            console.log(res.data.category);
+            //categoryList.push(res.data.category);
+            setCategoryList(res.data.category);
+            handleCategory()
+          }
+          else{
+            categoryList.length=0;
+          }
         })
-    }    
-}
 
-const getData=(e)=>{
-  Axios.post('http://localhost:8000/getQuantity',{
-    item_category:itemCategory,
-    item_type:itemType,
-    _id:itemId
-  }).then(res=>{
-     setAvailableQuantity(res.data.product[0].quantity)
-     alert("Quantity",res.data.product.quantity)
-     if(res.data.product[0].quantity!=0){
-          setbuttondisabled(true)
-          alert(buttondisabled)
-     }
-     else{
-      setbuttondisabled(false)
-      alert(buttondisabled)
-     }
-  })
-}
+        
 
-const handleItemCategory = (e) =>{
-  e.preventDefault();
-  setItemCategory(e.target.value);
+    }, [selectedCat]);
+    
+    var itemList = new Array();
+    useEffect(() => {
+        console.log("Updated selectedType:", selectedType);
+        Axios.post('http://localhost:8000/getItem',{
+            item_category:selectedCat,
+            item_type:selectedType
+            }).then(res=>{
+              var arr=res.data.product;
+              console.log('length',arr.length)
+             if(arr.length){
+               //idList.push(res.data.product)
+               console.log("Array",arr[0].product_id)
+               for(var i=0;i<arr.length;i++)
+                    itemList.push(arr[i].product_id);
+                console.log("New Array",itemList);
+               setIdList(itemList)
+               console.log("Ids",idList )
+              }
+              else{
+               idList.length=0
+              } 
+          })
+      }, [selectedType]);
 
-  Axios.post("http://localhost:8000/getUniqueItemtype",{
-    itemcategory: itemCategory
-  }).then((res)=>{
-      var arr=res.data.item_type;
-      if(arr.length){
-        console.log(res.data.item_type);
-        typeList.push(res.data.item_type);
-        setTypeListHasValue(true);
-      }
-      else{
-        typeList.length=0;
-        setTypeListHasValue(false);
-      }
-  })
-}
+    const handleCategory = () =>{
+        Axios.post("http://localhost:8000/getUniqueItemtype",{
+            itemcategory: selectedCat
+          }).then((res)=>{
+              var arr=res.data.item_type;
+              if(arr.length){
+                console.log(res.data.item_type);
+                //typeList.push(res.data.item_type);
+                setTypeList(res.data.item_type)
+              }
+            })
+          
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    console.log(itemCategory,itemType,itemId,availableQuantity);
-    alert(itemId)
-    Axios.post('http://localhost:8000/deleteItem',{
-      _id:itemId
-    }).then(res=>{
-      alert("deleted Successfully ")
-    })
+        
+              console.log(selectedType)
+            }
 
-    //alert("Product deleted successfully")
-  }
+
+
+            const handleSubmit = () => {
+                setVisible(false)
+
+                console.log(selectedCat,selectedType,itemId);
+                Axios.post('http://localhost:8000/deleteItem',{
+                  product_id:itemId
+                }).then((res)=>{
+                    showSuccess()
+                })
+            }
+        
+          
+    const popup =(e)=> {
+        e.preventDefault()
+        setVisible(true)
+    }
+
+
+    const footerContent = (
+        <div>
+            <Button label="Close" icon="pi pi-times" onClick={handleSubmit} autoFocus />
+        </div>
+    );
+
 
     return(
-        <>
-        <div className="container-addProduct">
-        <form>
-          
-        <div className="right-addProduct">
-          <h2>Delete Item</h2>
-        
-          <div className="row">
-            <div className="col25">
-              <label htmlFor="itemCategory">Item Category</label>
-            </div>
-            {/* <div className="col75">
-              <select id="itemCategory" name="itemCategory" onInput={(e)=>setItemCategory(e.target.value)} onChange={countSubmit}>
-              <option value="default">--Select--</option>
-                <option value="Stationary">Stationary</option>
-                <option value="Toys">Toys</option>
-                <option value="Gift Items">Gift Items</option>
-              </select>
-            </div> */}
-            <div className="col75">
-              <select id="itemCategory" name="itemCategory"  onInput={handleItemCategory}>
-                <option value="default">---Select---</option>
-                {categoryListHasValue && categoryList[0].map((category) => (
-                 <option key={category}>{category}</option>
-                ))}
-              </select>
-            </div>
-          </div>
+        <div className="addprod">
+                   <Toast ref={toast} />
+            <form>
+            <h2>DELETE PRODUCT</h2>
 
-          <div className="row">
-            <div className="col25">
-              <label htmlFor="itemType">Item Type</label>
-            </div>
-            {/* <div className="col75">
-              <select id="itemType" name="itemType" onInput={(e)=>setItemType(e.target.value)} onChange={countSubmit} >
-              <option value="default">--Select--</option>
-                <option value="Pen">Pen</option>
-                <option value="Paper">Paper</option>
-                <option value="Scale">Scale</option>
-                <option value="Colour Pens">Colour Pens</option>
-                <option value="Remote Control Toys">Remote Control Toys</option>
-                <option value="Soft Toys">Soft Toys</option>
-                <option value="Plastic Toys">Plastic Toys</option>
-                <option value="Photo Frames">Photo Frames</option>
-                <option value="Glass Products">Glass Products</option>
-                <option value="Coffee Mugs">Coffee Mugs</option>
-              </select>
-            </div> */}
-            <div className="col75">
-              <select id="itemType" name="itemType"  onChange={(e)=>setItemType(e.target.value)}>
-                <option value="default">---Select---</option>
-                {typeListHasValue && typeList[0].map((item_type) => (
-                 <option key={item_type}>{item_type}</option>
-                ))}
-              </select>
-            </div>
-          </div>
+                <div className="ap-grid">
+                    <div className="vwform">
 
-          <div className="row">
-            <div className="col25">
-              <label htmlFor="itemId">Item Id</label>
-            </div>
-            <div className="col75">
-              <select id="itemId" name="itemId" onInput={(e)=>setItemId(e.target.value)} onChange={getData}>
-                <option value="itemCat1">---Select---</option>
-                {idListHasValue && idList[0].map((product) => (
-                 <option key={product.product_id}>{product.product_id}</option>
-                ))}
-              </select>
-            </div>
-          </div>
+                            <div className="flex-1 p-inputgroup">
+                                    <Dropdown value={selectedCat} onChange={(e) => setSelectedCat(e.value)} options={categoryList}  
+                                    placeholder="Item Category" className="dp"/>
+                            </div>
 
-          <div className="row">
-            <div className="col25">
-              <label htmlFor="aQuantity">Available Quantity</label>
-            </div>
-            <div className="col75">
-              <input type="text" id="aQuantity" name="aQuantity" value={availableQuantity} />
-            </div>
-          </div>
-          
-            <div className="row">
-              <div className="col50">
-               <input type="button" className="addProduct-btns" name="cancel" value="CANCEL" />
-            </div>
-            <div className="col50">
-              <button disabled={buttondisabled} className="addProduct-btns" onClick={handleSubmit}>DELETE PRODUCT</button>
-            </div>
-            </div>
-        </div> 
-        
-        {/* <div className="image-upload">
-                <p><input type="file"  accept="image/*" name="image" id="file" onChange={handleUploadImage}/></p>
-                <p><label htmlFor="file">Image to be displayed</label></p>
-                <p><img id="output" width="200" style={{background:"blue"}}/></p>
-          </div>   */}
+                            <div className="flex-1 p-inputgroup">
+                                    <Dropdown value={selectedType} onChange={(e) => setSelectedType(e.value)} options={typeList} 
+                                    placeholder="Item Type" className="dp"/>
+                            </div>
 
-        </form>
+                            <div className="flex-1 p-inputgroup">
+                                    <Dropdown value={itemId} onChange={(e) => setItemId(e.value)} options={idList} 
+                                    placeholder="Item ID" className="dp"/>
+                            </div>
+                            <div className="fbtns">
+                        <Button label="Cancel" severity="danger" raised icon="pi pi-times" />
+                        <Button label="Delete Product" raised severity="info" icon="pi pi-eye" onClick={popup} />
+                    </div>
+                    </div>
+                    
+                </div>
+            </form>
+            <Dialog header="Product Details" visible={visible} style={{ width: '50vw' }} onHide={() => setVisible(false)} footer={footerContent}>
+                <div className="dialog-span">
+                    <span id="proid">Product ID: {product.product_id} </span>
+                    <span> Product Category : {product.item_category} </span> 
+                    <span>Product Type : {product.item_type} </span>
+
+
+                </div>
+            </Dialog> 
         </div>
-        </>
+
+
     );
 }
 
-export default DeleteProduct
+export default DeleteProduct;

@@ -10,13 +10,13 @@ const Sidebar = () => {
 
     return(
         <div className="sidebar">
-            <Navicon name="Dashboard" />
-            <NavLink to="/Product" activeClassName="active"><Navicon name="Product" /></NavLink>
-            <Navicon name="Product Sets" />
-            <NavLink to="/Order" activeClassName="active"><Navicon name="Order" /></NavLink>
-            <Navicon name="Customers" />
-            <NavLink to="/usermanagement" activeClassName="active"><Navicon  name="User Management" /></NavLink>
-        </div>
+            <NavLink to="/Dashboard" activeClassName="active"><Navicon name="Dashboard" class="space_dashboard"/></NavLink>
+            <NavLink to="/Product" activeClassName="active"><Navicon name="Product" class="inventory_2" /></NavLink>
+            <Navicon name="Product Sets" class="inventory" />
+            <NavLink to="/Order" activeClassName="active"><Navicon  name="Orders" class="shopping_cart" /></NavLink>
+            <Navicon name="Customers" class="group_add" />
+            <NavLink to="/usermanagement" activeClassName="active"><Navicon  name="User Management" class="shield_person" /></NavLink>
+            </div>
     );
 }
 

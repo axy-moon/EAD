@@ -22,7 +22,7 @@ const updateStock = async(req,res)=>{
 
 const orderDetails=async(req,res)=>{
     var seq1;
-    var check_count=await counterSchema.findOne().select("seq");
+    var check_count=await counterSchema.findOne({_id : 1}).select("seq");
     console.log('inside check',check_count);
     if(check_count == null){
         const ins=await new counterSchema({_id:1,seq:1})
@@ -68,7 +68,7 @@ const orderDetails=async(req,res)=>{
 
 const rentOrderDetails = async(req,res) => {
     var seq1;
-    var check_count = await counterSchema.findOne().select("seq");
+    var check_count = await counterSchema.findOne({_id:1}).select("seq");
     console.log('inside check',check_count);
     if(check_count == null){
         const ins=await new counterSchema({_id:1,seq:1})

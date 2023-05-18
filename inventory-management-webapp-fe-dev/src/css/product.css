@@ -1,22 +1,31 @@
-.addProd {
-    background-color: rgba(143, 143, 143, 0.35);
+.addprod {
     margin: 1px;
-    border-radius: 8px;
+    border-radius: 10px;
+    background-color: rgba(143, 143, 143, 0.35);
 
+    
 }
 
 .ap-grid {
     display: flex;
     gap: 40px;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     padding-left: 100px;
     height: 90vh;
     width: 92vw; 
+    margin: auto;
+    overflow: auto;
+
+}
+
+.bsform {
+    width: 60%;
+    margin: auto;
 }
 
 h1 {
-    text-align: left;
+    text-align: center;
     padding-bottom: 30px;
     margin-left: 100px;
 }
@@ -53,10 +62,6 @@ h1 {
     margin: 10px;
 }
 
-.bt-form {
-    display: flex;
-    flex-direction: column;
-}
 
 .bflex {
     display: flex;
@@ -97,6 +102,35 @@ h1 {
 .dialog-span {
     display: flex;
     flex-direction: column;
+    font-size: 20px;
     font-weight: 500;
     line-height: 1.8;
+}
+
+
+.vwform {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    margin: auto;
+    height: 50vh;
+}
+
+h2 {
+    padding-top: 20px;
+    text-align: center;
+    padding-bottom: 10px;
+}
+h1 {
+    text-align: center;
+}
+
+#proid {
+    color: red;
+}
+
+.orderCenter {
+    display: flex;
+    justify-content: center;
+    height: 100vh;
 }

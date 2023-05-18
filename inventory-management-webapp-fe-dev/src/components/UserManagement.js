@@ -14,77 +14,44 @@ import { Column } from 'primereact/column';
 
 var data, shopName, token;
 
-const init = initialState => initialState;
-
-const reducer = (state, action) => {
-  switch (action.type) {
-    case "dataLoaded":
-      return { ...state, results: action.payload, loading: false };
-    default:
-      throw new Error();
-  }
-};
-
-//window.location.reload(true);
-
-
-
 function UserManagement() {
         const toast = useRef(null);
-
+        const [result,setResult] = useState([]);
         const showSuccess = () => {
             toast.current.show({severity:'success', summary: 'Success', detail:'User Registered Successfully', life: 2000});
         }
         const showFailure = (name) => {
-          toast.current.show({severity:'error', summary: 'Error', detail:'User ' + ' already registered', life: 2000});
+          toast.current.show({severity:'error', summary: 'Error', detail:'User ' + name + ' already registered', life: 2000});
         }
         token = localStorage.getItem('token');
-        Axios({
-          method:"post",
-          url:"http://localhost:8000/getuserdetails",
-          data:{
-            "token":token
-          }
-        }).then((response)=>{
-          shopName=response.data.shopname;
-          console.log("SHOP NAME : "+shopName);
-          // Axios({
-          //   method:"get",
-          //   url:"http://localhost:8000/fetchUsers",
-          //   data:{
-          //     shopname:shopName
-          //   }
-          // }).then((res)=>{
-          //   //console.log(response.data.result);
-          //   data=res.data.result;
-          //   console.log("Res from fetchUsers : "+data);
-          // })
-          Axios({
-              method:"get",
-              url:"http://localhost:8000/fetchallUser"
-            }).then((res)=>{
-              data=res.data.result;
-              console.log("Res from fetchUsers : "+data);
-            })
-        })
+        
+        useEffect(() => {
+          const fetchData = async () => {
+            try {
+              const response1 = await Axios.post("http://localhost:8000/getuserdetails", {
+                token: token
+              });
+              const shopName = response1.data.shopname;
+              console.log("SHOP NAME: ", shopName);
+        
+              const response2 = await Axios.get("http://localhost:8000/fetchallUser");
+              const data = response2.data.result;
+              setResult(data);
+              console.log("Res from fetchUsers: ", data);
+            } catch (error) {
+              console.error("Error fetching data:", error);
+            }
+          };
+        
+          fetchData();
+        }, [token]);
 
         const [shopname, setShopName] = useState("");
         const [name, setName] = useState("");
         const [email, setEmail] = useState("");
         const [role, setRole] = useState("");
 
-        const initialState = {
-                results: [],
-                loading: true
-            };
-            const [state, dispatch] = useReducer(reducer, initialState, init);
-            const { results, loading } = state;
-
-            useEffect(() => {
-                if (loading) {
-                dispatch({ type: "dataLoaded", payload: data });
-                }
-            }, [loading]);
+      
             
 
             const getSeverity = (status) => {
@@ -189,7 +156,7 @@ function UserManagement() {
         <div className='bottom-grid'>
                     <div className='dataTable'>
                       <p className='center-head'>Current Members</p>
-                       <DataTable value={results} scrollable scrollHeight="240px" showGridlines tableStyle={{ textAlign:'center' }}>
+                       <DataTable value={result} scrollable scrollHeight="240px" showGridlines tableStyle={{ textAlign:'center' }}>
                        <Column field="name" header="Name"></Column>
                        <Column field="email" header="Email"></Column>
                        <Column field="roles" header="Role"></Column>

@@ -3,7 +3,7 @@
     align-items: center;
     justify-content: space-evenly;
     min-height: 100vh;
-    background-color: rgba(143, 143, 143, 0.35);
+    background-color:rgba(143, 143, 143, 0.35);
     width: 91vw;
 }
 
@@ -37,18 +37,6 @@
 .container-addProduct .right-addProduct .row .col50 {
     width: 50%;
 }
-
-.container-addProduct .right-addProduct .row .col100 {
-    width: 100%;
-}
-
-.container-addProduct .right-addProduct .row .col100 table,
-td {
-    border: 2px solid grey;
-    border-collapse: collapse;
-    padding: 0.5rem;
-}
-
 
 .container-addProduct .right-addProduct .row .col75 input[type=text],
 textarea {

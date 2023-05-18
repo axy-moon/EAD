@@ -1,154 +1,350 @@
-import React,{useState} from 'react'
-import '../productModule/addProduct.css'
+/* 
+    ---> Heading center
+*/
 
-import Header  from '../../commonComponents/Header'
-import Sidebar from '../../commonComponents/Sidebar'
+import React from "react";
+import { useState,useRef,useEffect } from "react";
+import { InputText } from 'primereact/inputtext';
+import { InputNumber } from 'primereact/inputnumber';
+import { Dropdown } from 'primereact/dropdown';
+import { Button } from 'primereact/button';
+import { InputTextarea } from 'primereact/inputtextarea';
+import { Checkbox } from "primereact/checkbox";
+import { Dialog } from 'primereact/dialog';
+import Axios from "axios";
+import { Toast } from 'primereact/toast';
+import "primereact/resources/themes/tailwind-light/theme.css"; 
+import '../../css/product.css'
 
-const SalesOrder = () => {
+
+function SalesOrder() {
+
+    const toast = useRef(null);
+
+    const showSuccess = () => {
+        toast.current.show({severity:'success', summary: 'Success', detail:'Order Rented Successfully', life: 2000});
+    }
+
+    const [selectedCat, setSelectedCat] = useState(null);
+    const [selectedType, setSelectedType] = useState(null);
+    const [visible, setVisible] = useState(false);
+    const [totalCost,setTotalCost] = useState('');
+    const [categoryList,setCategoryList] = useState([]);
+    const [categoryListHasValue,setCategoryListHasValue] = useState(false)
+    const [typeList,setTypeList]=useState([])
+    const [typeListHasValue,setTypeListHasValue] = useState(false)
+
+    const [CategoryOther,setCategoryOther] = useState(false);
+    const [ItemTypeOther,setItemTypeOther] = useState(false);
+
+    const [itemId, setItemId] = useState("")
+    const [idList,setIdList]=useState([])
+    const [idListHasValue,setIdListHasValue] = useState(false)
+    const [buttondisabled,setbuttondisabled]=useState(true)
+
   const [itemCategory, setItemCategory] = useState("")
   const [itemType, setItemType] = useState("")
-  const [itemId, setItemId] = useState("")
   const [availableQuantity, setAvailableQuantity] = useState("")
   const [stock, setStock] = useState("")
   const [customerName, setCustomerName] = useState("")
   const [customerAddress, setCustomerAddress] = useState("")
   const [phoneNumber, setPhoneNumber] = useState("")
 
+//   useEffect(() => {
+//     Axios.post("http://localhost:8000/uniqueCategory").then((res)=>{
+//       var arr=res.data.category;
+//     //   console.log('length',arr.length)
+//       if(arr.length){
+//         // console.log(res.data.category);
+//         //categoryList.push(res.data.category);
+//         setCategoryList(res.data.category)
+//         setCategoryListHasValue(true);
+//       }
+//       else{
+//         categoryList.length=0;
+//         setCategoryListHasValue(false);
+//       }
+//     })
+//     .catch(e => {
+//         console.log(e);
+//     })
+// }, []);
 
+useEffect(() => {
+    Axios.post("http://localhost:8000/uniqueCategory").then((res)=>{
+      var arr=res.data.category;
+    //   console.log('length',arr.length)
+      if(arr.length){
+        // console.log(res.data.category);
+        //categoryList.push(res.data.category);
+        setCategoryList(res.data.category)
+        setTypeListHasValue(true);
+        // console.log(typeListHasValue)
+         handleCategory()
+      }
+      else{
+        categoryList.length=0;
+        setTypeListHasValue(false);
+      }
+    })
+    .catch(e => {
+        console.log(e);
+    })
+}, [selectedCat]);
 
-  const handleUploadImage = (e) =>
-  {
-    e.preventDefault()
-    const imgEle = document.getElementById('output')
-    imgEle.src = e.target.value;
-    console.log(e.target.value)
-    console.log(imgEle)
+var itemList = new Array();
+useEffect(() => {
+    console.log("Updated selectedType:", selectedType);
+    Axios.post('http://localhost:8000/getItem',{
+        item_category:selectedCat,
+        item_type:selectedType
+        }).then(res=>{
+          var arr=res.data.product;
+        //   console.log('length',arr.length)
+         if(arr.length){
+           //idList.push(res.data.product)
+        //    console.log("Array",arr[0].product_id)
+           for(var i=0;i<arr.length;i++)
+                itemList.push(arr[i].product_id);
+            // console.log("New Array",itemList);
+            idList.push(itemList)
+           setIdList(itemList)
+        //    console.log("Ids",idList )
+           setIdListHasValue(true)
+          }
+          else{
+           idList.length=0
+           setIdListHasValue(false)
+          } 
+      })
+  }, [selectedType]);
+
+  useEffect(() => {
+    console.log("Updated selectedItem:", itemId);
+    Axios.post('http://localhost:8000/getQuantity',{
+      item_category:selectedCat,
+      item_type:typeList,
+      product_id:itemId
+    }).then(res=>{
+        // console.log("Product qty: ",res.data.product)
+       setAvailableQuantity(res.data.product[0].quantity)
+       if(res.data.product[0].quantity!=0){
+            setbuttondisabled(true)
+       }
+       else{
+        setbuttondisabled(false)
+       }
+    })
+   
+  }, [itemId]);
+
+const getData=(e)=>{
+    setItemId(e.target.value)
+    // console.log("Set Item ID: ",itemId);
   }
+
+
 
   const handleSubmit = (e) => {
-    e.preventDefault()
-    console.log(itemCategory,itemType,itemId,availableQuantity,stock,customerName,customerAddress,phoneNumber)
+    e.preventDefault();
+    setVisible(false)
+    console.log(selectedCat,selectedType,availableQuantity,stock,customerName,customerAddress,phoneNumber)
+    Axios.post("http://localhost:8000/orderDetails",{
+        item_category:selectedCat,
+        item_type:selectedType,
+        product_id:itemId,
+        stock:stock,
+        customer_name:customerName,
+        customer_address:customerAddress,
+        phone_number:phoneNumber
 
-    alert("Your order has been placed Successfully")
+    })
+    showSuccess()
   }
 
-
-    return(
-        <>
-            <div className="container-addProduct">
-        <form> 
-        <div className="right-addProduct">
-          <h2>Sales Order</h2>
-          <br></br>
-          <h3>Product Details</h3>
-          
-          <div className="row">
-            <div className="col25">
-              <label htmlFor="itemCategory">Item Category</label>
-            </div>
-            <div className="col75">
-              <select id="itemCategory" name="itemCategory" onInput={(e)=>setItemCategory(e.target.value)}>
-                <option value="itemCat1">itemCat1</option>
-                <option value="itemCat2">itemCat2</option>
-                <option value="itemCat3">itemCat3</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="row">
-            <div className="col25">
-              <label htmlFor="itemType">Item Type</label>
-            </div>
-            <div className="col75">
-              <select id="itemType" name="itemType" onInput={(e)=>setItemType(e.target.value)}>
-                <option value="itemType1">itemType1</option>
-                <option value="itemType2">itemType2</option>
-                <option value="itemType3">itemType3</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="row">
-            <div className="col25">
-              <label htmlFor="itemId">Item Id</label>
-            </div>
-            <div className="col75">
-              <select id="itemId" name="itemId" onInput={(e)=>setItemId(e.target.value)}>
-                <option value="itemId1">itemId1</option>
-                <option value="itemId2">itemId2</option>
-                <option value="itemId2">itemId3</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="row">
-            <div className="col25">
-              <label htmlFor="aQuantity">Available Quantity</label>
-            </div>
-            <div className="col75">
-              <input type="text" id="aQuantity" name="aQuantity" disabled />
-            </div>
-          </div>
-
-          <div className="row">
-            <div className="col25">
-              <label htmlFor="stock">Stock</label>
-            </div>
-            <div className="col75">
-              <input type="text" id="stock" name="stock" onInput={(e)=>setStock(e.target.value)}/>
-            </div>
-          </div>
-
-          {/* ------------------Customer Details---------------------------- */}
-
-          <h3>Customer Details</h3>
-          <div className="row">
-            <div className="col25">
-              <label htmlFor="customerName">Customer Name</label>
-            </div>
-            <div className="col75">
-              <input type="text" id="customerName" name="customerName" onInput={(e)=>setCustomerName(e.target.value)}/>
-            </div>
-          </div>
-
-          <div className="row">
-            <div className="col25">
-              <label htmlFor="customerAddress">Customer Address</label>
-            </div>
-            <div className="col75">
-              <input type="text" id="customerAddress" name="customerAddress" onInput={(e)=>setCustomerAddress(e.target.value)}/>
-            </div>
-          </div>
-
-          <div className="row">
-            <div className="col25">
-              <label htmlFor="phoneNumber">Phone Number</label>
-            </div>
-            <div className="col75">
-              <input type="text" id="phoneNumber" name="phoneNumber" onInput={(e)=>setPhoneNumber(e.target.value)}/>
-            </div>
-          </div>
-          
-            <div className="row">
-              <div className="col50">
-               <input type="button" className="addProduct-btns" name="cancel" value="CANCEL" />
-            </div>
-            <div className="col50">
-              <button className="addProduct-btns" onClick={handleSubmit}>ORDER</button>
-            </div>
-            </div>
-        </div> 
-        
-        <div className="image-upload">
-                <p><input type="file"  accept="image/*" name="image" id="file" onChange={handleUploadImage}/></p>
-                <p><label htmlFor="file">Upload Image</label></p>
-                <p><img id="output" width="200" style={{background:"blue"}}/></p>
-          </div>  
-
-        </form>
-        </div>
-        </>
-    );
+  const handleCategory = () =>{
+    Axios.post("http://localhost:8000/getUniqueItemtype",{
+        itemcategory: selectedCat
+      }).then((res)=>{
+          var arr=res.data.item_type;
+          if(arr.length){
+            // console.log(res.data.item_type);
+            //typeList.push(res.data.item_Type);
+            setTypeList(res.data.item_type)
+            // console.log("Type List : "+typeList);
+            setTypeListHasValue(true);
+          }
+          else{
+            typeList.length=0;
+            setTypeListHasValue(false);
+          }
+        })
+        .catch(e => {
+            console.log(e);
+        })
 }
 
-export default SalesOrder
+//   Axios({
+//     method:"post",
+//     url:"http://localhost:8000/orderDetails",
+//     data:{
+//         item_category:itemCategory,
+//         item_type:itemType,
+//         product_id:itemId,
+//         stock:stock,
+//         customer_name:customerName,
+//         customer_address:customerAddress,
+//         phone_number:phoneNumber
+//     }
+//   }).then((response)=>{
+//     showSuccess();
+//   })
+
+  const clearForm = () => {
+    // setSelectedCat(null);
+    // setSelectedType(null);
+    // setProductID('');
+    // setPurchaseCost('');
+    // setQuantity('');
+    // setNotes('');
+    // setDepositAmount('');
+    // SetSalesPrice('');
+    // setRent(false);
+    // setSales(false);
+}
+
+const popup =(e)=> {
+    e.preventDefault()
+    console.log(selectedCat,selectedType,availableQuantity,stock,customerName,customerAddress,phoneNumber)
+
+    setVisible(true)
+
+}
+
+const footerContent = (
+    <div>
+        <Button label="No" icon="pi pi-times" onClick={() => setVisible(false)} className="p-button-text" />
+        <Button label="Yes" icon="pi pi-check" onClick={handleSubmit} autoFocus />
+    </div>
+);
+
+
+  return (
+    <div className="addprod">
+        <Toast ref={toast} />
+        
+        <form>
+        <div className="ap-grid">
+        <h1>PRODUCT DETAILS</h1>
+
+        <div className="card flex flex-column md:flex-row top gap-3">
+
+            <div className="bsform">
+
+            <div className="flex-1 p-inputgroup">
+                <Dropdown value={selectedCat}  onChange={(e)=>setSelectedCat(e.target.value)} options={categoryList}
+                    placeholder="Select a Category" className="dp"/>
+            </div>
+
+            { CategoryOther && <div className="p-inputgroup flex-1">
+             <span className="p-inputgroup-addon">
+                    <i className="pi pi-bookmark-fill"></i>
+                </span>
+                <InputText placeholder="New Category" onChange={(e)=>setSelectedCat(e.target.value)}/>
+            </div>}
+
+            <div className="flex-1 p-inputgroup">
+            <Dropdown value={selectedType}  options={typeList}  onChange={(e) => setSelectedType(e.target.value)} 
+                placeholder="Select a Type" className="dp"/>
+             </div>
+
+             <div className="p-inputgroup flex-1">
+             <span className="p-inputgroup-addon">
+                    <i className="pi pi-hashtag"></i>
+                </span>
+                <Dropdown value={itemId}  onChange={getData} options={idList} 
+                    placeholder="Select Item Id" className="dp"/>
+            </div>
+
+             <div className="p-inputgroup flex-1">
+                <span className="p-inputgroup-addon">
+                    <i className="pi pi-angle-double-right"></i>
+                </span>
+                <InputText placeholder="Available Quantity" value={availableQuantity} />
+            </div>
+
+            <div className="p-inputgroup flex-1">
+                <span className="p-inputgroup-addon">
+                    <i className="pi pi-angle-double-right"></i>
+                </span>
+                <InputText placeholder="Stock for sale" onInput={(e)=>setStock(e.target.value)} />
+            </div>
+
+            <br></br>
+            <h1>CUSTOMER DETAILS</h1>
+
+            <div className="p-inputgroup flex-1">
+                <span className="p-inputgroup-addon">
+                    <i className="pi pi-angle-double-right"></i>
+                </span>
+                <InputText placeholder="Customer Name" onInput={(e)=>setCustomerName(e.target.value)}/>
+            </div>
+
+            <div className="p-inputgroup flex-1">
+                <span className="p-inputgroup-addon">
+                    <i className="pi pi-angle-double-right"></i>
+                </span>
+                <InputText placeholder="Customer Address" onInput={(e)=>setCustomerAddress(e.target.value)}/>
+            </div>
+
+            <div className="p-inputgroup flex-1">
+                <span className="p-inputgroup-addon">
+                    <i className="pi pi-angle-double-right"></i>
+                </span>
+                <InputText placeholder="Phone Number" onInput={(e)=>setPhoneNumber(e.target.value)}/>
+            </div>
+            <div className="fbtns">
+                    <Button label="Cancel" severity="danger" raised icon="pi pi-times" onClick={clearForm} />
+                    <Button label="Add" raised severity="success" icon="pi pi-check" onClick={popup}  />
+            </div>
+            </div>
+            <div className="image-up">
+            {/* <ImageUploader/> */}
+            </div>
+            </div>
+            
+
+             <Dialog header="Product Details" visible={visible} style={{ width: '50vw' }} onHide={() => setVisible(false)} footer={footerContent}>
+                <div className="dialog-span">
+                    <span>Item Category: {selectedCat}</span>
+                    <span>Item Type: {selectedCat}</span>
+                    <span>Item id: {itemId}</span>
+                    <span>Available Quantity: {availableQuantity}</span>
+                    <span>Stock: {stock}</span>
+                    <span>Customer Name: {customerName}</span>
+                    <span>Customer Address: {customerAddress}</span>
+                    <span>Phone Number: {phoneNumber}</span>
+
+                </div>
+            </Dialog> 
+
+            <div className="card flex flex-column md:flex-row gap-3 bflex">
+                
+                <div className="rform">
+                    
+                </div>
+            </div>
+
+        </div>
+
+        {/* <div className="card flex flex-wrap justify-content-center gap-3">
+        <Button label="Add Product" icon="pi pi-plus"/>
+        
+        </div>
+ */}
+        </form>
+        </div   >
+  )
+}
+
+export default SalesOrder;

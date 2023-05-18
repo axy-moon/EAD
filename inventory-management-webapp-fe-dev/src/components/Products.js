@@ -1,5 +1,5 @@
 import React from "react";
-import {useReducer, useEffect, useRef} from 'react';
+import {useReducer, useEffect, useRef, useState} from 'react';
 import Header from "../commonComponents/Header"
 import Sidebar from "../commonComponents/Sidebar"
 import productfile from "./products.json"
@@ -15,41 +15,34 @@ import "primereact/resources/themes/lara-light-indigo/theme.css";
 
 import DoughnutChart from "./Chart";
 
-const init = initialState => initialState;
-var data;
-
-const reducer = (state, action) => {
-  switch (action.type) {
-    case "dataLoaded":
-      return { ...state, results: action.payload, loading: false };
-    default:
-      throw new Error();
-  }
-};
 
 const Products = () => {
+    const [result,setResult] = useState([]);
+    const [tqty,setTqty] = useState(null);
     const navigate = useNavigate();
+    useEffect(() => {
+        const fetchData = async () => {
+          try {
+            const response = await Axios.get("http://localhost:8000/fetchProductDetails");
+            const data = response.data.product;
+             if(data.length) {
+               console.log("Array",data[0].product_id)
+               var sum = 0;
+               for(var i=0;i<data.length;i++) 
+                    sum = sum+data[i].quantity;
+                console.log("SUM",sum);
+                setTqty(sum);
+            }
 
-        Axios({
-            method:"get",
-            url:"http://localhost:8000/fetchProductDetails"
-        }).then((res)=>{
-            data = res.data.product;
-            console.log("DATA FROM FETCH ALL PRODUCT API : "+data);
-        })
-
-         const initialState = {
-                results: [],
-                loading: true
-            };
-            const [state, dispatch] = useReducer(reducer, initialState, init);
-            const { results, loading } = state;
-
-            useEffect(() => {
-                if (loading) {
-                dispatch({ type: "dataLoaded", payload: data });
-                }
-            }, [loading]);
+            setResult(data);
+            console.log("DATA FROM FETCH ALL PRODUCT API: ", data);
+          } catch (error) {
+            console.error("Error fetching data:", error);
+          }
+        };
+      
+        fetchData();
+      }, []);
 
             const navAddProducts = () => {
                 navigate('/AddProduct')
@@ -73,7 +66,7 @@ const Products = () => {
                 <div className="ps-grid-top">
                     <div className="ps-grid-left">
                         <h1>Total Products</h1>
-                        <span>428</span>
+                        <span>{tqty}</span>
                     </div>
                     <div className="ps-grid-center">
                         <h3>Manage Products</h3>
@@ -103,7 +96,7 @@ const Products = () => {
                 <div className="ps-grid-bleft">
                 <h3>Recently Added Products</h3>
                 <div className="ps-dt-table">
-                <DataTable value={results} scrollable scrollHeight="240px" size="small" tableStyle={{ width: '40rem' }}>
+                <DataTable value={result} scrollable scrollHeight="240px" size="small" tableStyle={{ width: '40rem' }}>
                     <Column field="product_id" header="PRODUCT ID"></Column>
                     <Column field="item_category" header="ITEM CATEGORY"></Column>
                     <Column field="item_type" header="ITEM TYPE"></Column>
@@ -111,7 +104,7 @@ const Products = () => {
                 </DataTable>
                 </div>
                 </div>
-                <div className="ps-grid-bright">
+               {/*  <div className="ps-grid-bright">
                     <h2>This Month</h2>
                     <div>
                     <span>90</span>
@@ -131,7 +124,7 @@ const Products = () => {
                         <button type="button">See Orders</button>
                     </div>
 
-                </div>
+                </div> */}
                 </div>
             </div>
         </>
