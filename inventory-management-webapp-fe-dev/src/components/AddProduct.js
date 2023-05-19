@@ -241,7 +241,6 @@ const AddProduct = () => {
           
     const popup =(e)=> {
         e.preventDefault()
-
         setVisible(true)
     }
 
@@ -338,11 +337,13 @@ const AddProduct = () => {
                     <div className="p-inputgroup flex-1">
                         <span className="p-inputgroup-addon">₹</span>
                         <InputText placeholder="Deposit Amount"  onInput={(e) => setDepositAmount(e.target.value)}  />
+                        <span className="p-inputgroup-addon">/unit</span>
                     </div>}
                     {sales && 
                     <div className="p-inputgroup flex-1">
                         <span className="p-inputgroup-addon">₹</span>
                         <InputText placeholder="Sales Price"  onInput={(e) => SetSalesPrice(e.target.value)} />
+                        <span className="p-inputgroup-addon">/unit</span>
                     </div> }
                     <div className="flex-1" style={{'marginTop' : '30px'}}>
                     <span className="p-float-label">

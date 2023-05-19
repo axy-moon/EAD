@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from '../commonComponents/Button';
 import Axios from "axios";
+import { Toast } from 'primereact/toast';
 
 //routing
 import {useParams} from 'react-router-dom'
@@ -15,6 +16,11 @@ import '../css/login.css';
 var linkValidity;
 
 const SetPassword = () => {
+    const toast = useRef(null);
+
+    const showFailure = () => {
+        toast.current.show({severity:'error', summary: 'Failure', detail:'Link Expired !!!', life: 3000});
+    }
 
     const param = useParams();
 
@@ -35,7 +41,7 @@ const SetPassword = () => {
               setIsReadOnly(true);
         }
         else if(linkValidity=="Link Expired"){
-            alert("Link Expired");
+            showFailure();
             setIsReadOnly(true);
         } 
         else{
@@ -97,6 +103,7 @@ const SetPassword = () => {
                 <h1 id="login-logo">logo</h1>
             </div>
             <div className="right">
+                <Toast ref={toast} />
                 <form onSubmit={handleSubmit} className="CreateAccountForm" id="CreateAccountForm">
                 <div className="input-group">
                     <h1>Create Account</h1>
