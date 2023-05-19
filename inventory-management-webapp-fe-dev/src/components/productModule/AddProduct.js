@@ -65,12 +65,16 @@ const AddProduct = () => {
             setCategoryListHasValue(true);
             console.log(id)
 
-            handleCategory()
           }
           else{
             categoryList.length=0;
-            setCategoryListHasValue(false);
+            setCategoryList(["Others"]);
+            setCategoryOther(false);
+
+
           }
+
+          handleCategory()
         })
     }, [selectedCat]);
 
