@@ -13,7 +13,7 @@
     align-items: center;
     padding-left: 100px;
     height: 90vh;
-    width: 92vw; 
+    width: 91.5vw; 
     margin: auto;
     overflow: auto;
 
@@ -26,8 +26,8 @@
 
 h1 {
     text-align: center;
-    padding-bottom: 30px;
-    margin-left: 100px;
+    padding-bottom: 10px;
+    padding-top: 10px;
 }
 .p-inputgroup {
     margin-bottom: 20px;
@@ -72,6 +72,8 @@ h1 {
     display: flex;
     gap: 18px;
     margin-top: 10px;
+    justify-content:flex-end;
+    padding-bottom: 20px;
 }
 
 .p-button {
@@ -133,4 +135,9 @@ h1 {
     display: flex;
     justify-content: center;
     height: 100vh;
+}
+
+.sale-btns {
+    width: 50%;
+    border: 1px solid;
 }

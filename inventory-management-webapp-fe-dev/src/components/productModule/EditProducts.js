@@ -185,7 +185,7 @@ const EditProducts = () => {
         <div className="addprod">
         <Toast ref={toast} />
 
-        <h1>Edit Product</h1>
+        <h2>EDIT PRODUCT</h2>
         <form>
         <div className="ap-grid">
         <div className="card flex flex-column md:flex-row top gap-3">

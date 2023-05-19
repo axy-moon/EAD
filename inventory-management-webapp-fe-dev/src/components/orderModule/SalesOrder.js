@@ -24,6 +24,9 @@ function SalesOrder() {
     const showSuccess = () => {
         toast.current.show({severity:'success', summary: 'Success', detail:'Order Rented Successfully', life: 2000});
     }
+    const showFailure = () => {
+      toast.current.show({severity:'error', summary: 'Error', detail:'Invalid Quantity Value', life: 2000});
+  }
 
     const [selectedCat, setSelectedCat] = useState(null);
     const [selectedType, setSelectedType] = useState(null);
@@ -148,6 +151,11 @@ const getData=(e)=>{
   const handleSubmit = (e) => {
     e.preventDefault();
     setVisible(false)
+    if(stock>availableQuantity || stock<0){
+      console.log("Stock exceeded")
+      showFailure()
+      return;
+    }
     console.log(selectedCat,selectedType,availableQuantity,stock,customerName,customerAddress,phoneNumber)
     Axios.post("http://localhost:8000/orderDetails",{
         item_category:selectedCat,
@@ -161,6 +169,7 @@ const getData=(e)=>{
     })
     showSuccess()
   }
+
 
   const handleCategory = () =>{
     Axios.post("http://localhost:8000/getUniqueItemtype",{
@@ -246,13 +255,6 @@ const footerContent = (
                     placeholder="Select a Category" className="dp"/>
             </div>
 
-            { CategoryOther && <div className="p-inputgroup flex-1">
-             <span className="p-inputgroup-addon">
-                    <i className="pi pi-bookmark-fill"></i>
-                </span>
-                <InputText placeholder="New Category" onChange={(e)=>setSelectedCat(e.target.value)}/>
-            </div>}
-
             <div className="flex-1 p-inputgroup">
             <Dropdown value={selectedType}  options={typeList}  onChange={(e) => setSelectedType(e.target.value)} 
                 placeholder="Select a Type" className="dp"/>
@@ -268,7 +270,7 @@ const footerContent = (
 
              <div className="p-inputgroup flex-1">
                 <span className="p-inputgroup-addon">
-                    <i className="pi pi-angle-double-right"></i>
+                    <i className="pi pi-cart-plus"></i>
                 </span>
                 <InputText placeholder="Available Quantity" value={availableQuantity} />
             </div>
@@ -277,7 +279,7 @@ const footerContent = (
                 <span className="p-inputgroup-addon">
                     <i className="pi pi-angle-double-right"></i>
                 </span>
-                <InputText placeholder="Stock for sale" onInput={(e)=>setStock(e.target.value)} />
+                <InputText placeholder="Stock for sale" onChange={(e)=> setStock(e.target.value)} />
             </div>
 
             <br></br>
@@ -285,21 +287,21 @@ const footerContent = (
 
             <div className="p-inputgroup flex-1">
                 <span className="p-inputgroup-addon">
-                    <i className="pi pi-angle-double-right"></i>
+                    <i className="pi pi-user"></i>
                 </span>
                 <InputText placeholder="Customer Name" onInput={(e)=>setCustomerName(e.target.value)}/>
             </div>
 
             <div className="p-inputgroup flex-1">
                 <span className="p-inputgroup-addon">
-                    <i className="pi pi-angle-double-right"></i>
+                    <i className="pi pi-map-marker"></i>
                 </span>
                 <InputText placeholder="Customer Address" onInput={(e)=>setCustomerAddress(e.target.value)}/>
             </div>
 
             <div className="p-inputgroup flex-1">
                 <span className="p-inputgroup-addon">
-                    <i className="pi pi-angle-double-right"></i>
+                    <i className="pi pi-mobile"></i>
                 </span>
                 <InputText placeholder="Phone Number" onInput={(e)=>setPhoneNumber(e.target.value)}/>
             </div>

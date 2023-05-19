@@ -27,6 +27,10 @@ const RentOrder = () => {
     const showSuccess = () => {
         toast.current.show({severity:'success', summary: 'Success', detail:'Rent Order Details Inserted Successfully', life: 2000});
     }
+
+    const showFailure = () => {
+      toast.current.show({severity:'error', summary: 'Error', detail:'Invalid Quantity Value', life: 2000});
+  }
     const [selectedCat, setSelectedCat] = useState(null);
     const [visible, setVisible] = useState(false);
     const [totalCost,setTotalCost] = useState('');
@@ -170,6 +174,11 @@ const RentOrder = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         setVisible(false)
+        if(quantity>availableQuantity || quantity<0){
+          console.log("Stock exceeded")
+          showFailure()
+          return;
+        } 
         showSuccess()
         console.log(selectedCat)
         console.log(selectedType)
@@ -242,7 +251,7 @@ const RentOrder = () => {
 
              <div className="p-inputgroup flex-1">
                 <span className="p-inputgroup-addon">
-                <span class="material-symbols-outlined gicon">payments</span>
+                <i className="pi pi-cart-plus"></i>
                 </span>
                 <InputText disabled placeholder="Available Quantity" value={availableQuantity} required />
             </div>
@@ -256,15 +265,13 @@ const RentOrder = () => {
 
             <div className="p-inputgroup flex-1">
                 <span className="p-inputgroup-addon">
-                <span class="material-symbols-outlined gicon">payments</span>
-                </span>
+                <i className="pi pi-calendar-minus"></i></span>
                 <Calendar value={todate} placeholder="From Date" onChange={(e) => setToDate(e.value)} />
             </div>
 
             <div className="p-inputgroup flex-1">
                 <span className="p-inputgroup-addon">
-                <span class="material-symbols-outlined gicon">payments</span>
-                </span>
+                <i className="pi pi-calendar-plus"></i></span>
                 <Calendar value={fromdate} placeholder="To Date" onChange={(e) => setFromDate(e.value)} />
             </div>
 
@@ -281,21 +288,21 @@ const RentOrder = () => {
 
             <div className="p-inputgroup flex-1">
             <span className="p-inputgroup-addon">
-                    <i className="pi pi-angle-double-right"></i>
+            <i className="pi pi-user"></i>
                 </span>
                 <InputText placeholder="Customer Name" onInput={(e)=>setCustomerName(e.target.value)}  />
             </div>
 
             <div className="p-inputgroup flex-1">
             <span className="p-inputgroup-addon">
-                    <i className="pi pi-angle-double-right"></i>
+            <i className="pi pi-map-marker"></i>
                 </span>
                 <InputText placeholder="Customer Address" onInput={(e)=>setCustomerAddress(e.target.value)}  />
             </div>
 
             <div className="p-inputgroup flex-1">
             <span className="p-inputgroup-addon">
-                    <i className="pi pi-angle-double-right"></i>
+            <i className="pi pi-mobile"></i>
                 </span>
                 <InputText placeholder="Phone Number" onInput={(e)=>setPhoneNumber(e.target.value)}  />
             </div>
@@ -312,7 +319,7 @@ const RentOrder = () => {
 
             <div className="fbtns">
                     <Button label="Cancel" severity="danger" raised icon="pi pi-times" onClick={clearForm} />
-                    <Button label="Add" raised severity="success" icon="pi pi-check" onClick={popup}  />
+                    <Button label="Rent" raised severity="success" icon="pi pi-plus" onClick={popup}  />
             </div>
 
             </div>

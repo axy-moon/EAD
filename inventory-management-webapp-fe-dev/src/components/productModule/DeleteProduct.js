@@ -111,6 +111,7 @@ const DeleteProduct = () => {
                   product_id:itemId
                 }).then((res)=>{
                     showSuccess()
+                    window.location.reload(false)
                 })
             }
         
@@ -123,7 +124,7 @@ const DeleteProduct = () => {
 
     const footerContent = (
         <div>
-            <Button label="Close" icon="pi pi-times" onClick={handleSubmit} autoFocus />
+            <Button label="OK" icon="pi pi-times" onClick={handleSubmit} autoFocus />
         </div>
     );
 
@@ -161,9 +162,9 @@ const DeleteProduct = () => {
             </form>
             <Dialog header="Product Details" visible={visible} style={{ width: '50vw' }} onHide={() => setVisible(false)} footer={footerContent}>
                 <div className="dialog-span">
-                    <span id="proid">Product ID: {product.product_id} </span>
-                    <span> Product Category : {product.item_category} </span> 
-                    <span>Product Type : {product.item_type} </span>
+                    <span id="proid">Product ID: {itemId} </span>
+                    <span> Product Category : {selectedCat} </span> 
+                    <span>Product Type : {selectedType} </span>
 
 
                 </div>

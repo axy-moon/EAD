@@ -3,6 +3,8 @@ import '../../css/product.css';
 import {Button} from 'primereact/button';
 import {useNavigate} from "react-router-dom";
 
+import '../../css/product.css'
+
 
 function Order() {
   const navigate = useNavigate();
@@ -16,14 +18,15 @@ function Order() {
 
   return (
     <div className="orderCenter">
-        <h2>ORDER MANAGEMENT</h2>
-        <br/>
-        <div className="ap-grid">
-            <div className="fbtns">
-                <Button label="Sales Order" severity="success" raised icon="pi pi-check" onClick={handleSalesButton}/>
+        <div className="addprod">
+          <h1>MANAGE ORDERS</h1>
+          <div className='ap-grid'>
+            <div className="sale-btns">
+                <Button label="Sales Order" severity="info" raised icon="pi pi-link" onClick={handleSalesButton}/>
                 <br/>
                 <br/>
-                <Button label="Rent Order" severity="success" raised icon="pi pi-check" onClick={handleRentButton}/>
+                <Button label="Rent Order" severity="warning" raised icon="pi pi-check-square" onClick={handleRentButton}/>
+            </div>
             </div>
         </div>
     </div>

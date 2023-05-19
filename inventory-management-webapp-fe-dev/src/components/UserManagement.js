@@ -104,7 +104,7 @@ function UserManagement() {
                 })
               }
               else
-                  showFailure()
+                  showFailure(name)
             })
           }
 

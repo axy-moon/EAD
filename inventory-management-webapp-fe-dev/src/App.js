@@ -11,7 +11,7 @@ import ResetPassword from './components/ResetPassword';
 
 import UserManagement from './components/UserManagement'
 import Products from './components/Products'
-import AddProduct from './components/AddProduct'
+import AddProduct from './components/productModule/AddProduct'
 import ViewProducts from './components/productModule/ViewProducts';
 import EditProduct from './components/productModule/EditProducts';
 import DeleteProduct from './components/productModule/DeleteProduct';

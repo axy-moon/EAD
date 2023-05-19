@@ -1,11 +1,9 @@
 /*
 
 ---> id in Pop up
-----> Other in type
+----> Other in type -  done
 
 */
-
-
 import React, { useState,useRef,useEffect } from "react";
 import { InputText } from 'primereact/inputtext';
 import { InputNumber } from 'primereact/inputnumber';
@@ -15,6 +13,9 @@ import { InputTextarea } from 'primereact/inputtextarea';
 import { Checkbox } from "primereact/checkbox";
 import { Dialog } from 'primereact/dialog';
 import Axios from "axios";
+import { Link } from "react-router-dom";
+
+
 
 import { Toast } from 'primereact/toast';
 
@@ -32,8 +33,6 @@ import { type } from "@testing-library/user-event/dist/type";
 
 const AddProduct = () => {
     const toast = useRef(null);
-    const [id,setId] = useState(null);
-
 
     const showSuccess = () => {
         toast.current.show({severity:'success', summary: 'Success', detail:'Product Details Inserted Successfully', life: 2000});
@@ -47,6 +46,9 @@ const AddProduct = () => {
     const [categoryListHasValue,setCategoryListHasValue] = useState(false)
     const [typeList,setTypeList]=useState([])
     const [typeListHasValue,setTypeListHasValue] = useState(false)
+    const [selectedType, setSelectedType] = useState(null);
+    const [id,setPid] = useState(null);
+
 
     const [CategoryOther,setCategoryOther] = useState(false);
     const [ItemTypeOther,setItemTypeOther] = useState(false);
@@ -61,25 +63,8 @@ const AddProduct = () => {
             setCategoryList(res.data.category);
             setCategoryList((prevItems) => [...prevItems, "Others"])
             setCategoryListHasValue(true);
-            handleCategory()
-          }
-          else{
-            categoryList.length=0;
-            setCategoryListHasValue(false);
-          }
-        })
-    }, [selectedCat]);
+            console.log(id)
 
-    useEffect(() => {
-        Axios.post("http://localhost:8000/uniqueCategory").then((res)=>{
-          var arr=res.data.category;
-          console.log('length',arr.length)
-          if(arr.length){
-            console.log(res.data.category);
-            //categoryList.push(res.data.category);
-            setCategoryList(res.data.category);
-            setCategoryList((prevItems) => [...prevItems, "Others"])
-            setCategoryListHasValue(true);
             handleCategory()
           }
           else{
@@ -93,9 +78,13 @@ const AddProduct = () => {
       if( selectedCat === "Others"){
           setCategoryOther(true);
           setItemTypeOther(true);
+          document.getElementById('catdiv').style.display = 'none';
       }
       else{
           setCategoryOther(false);
+          setItemTypeOther(false);
+          document.getElementById('catdiv').style.display = 'flex';
+
       }
         Axios.post("http://localhost:8000/getUniqueItemtype",{
           itemcategory: selectedCat
@@ -114,16 +103,19 @@ const AddProduct = () => {
               setTypeListHasValue(false);
             }
           })
-  } 
+  }
+  
+  useEffect(() => {
+    console.log("Updated selectedType:", selectedType);
+    if(selectedType === 'Others') 
+      setItemTypeOther(true)
+    else
+      setItemTypeOther(false)
+  },[selectedType])
 
     const handleItemType = (e) =>{
-      setSelectedType(e.target.value)
-      if(selectedType === "Others"){
-        setItemTypeOther(true) 
-      }
-      else{
-        setItemTypeOther(false);
-      }
+      setSelectedType(e.value)
+      console.log("Selected Type",selectedType)
     }
 
     const [rent, setRent] = useState(false);
@@ -139,7 +131,6 @@ const AddProduct = () => {
 
 
 
-    const [selectedType, setSelectedType] = useState(null);
 
 
     //Form Values
@@ -149,7 +140,6 @@ const AddProduct = () => {
     const [depositAmount,setDepositAmount] = useState('');
     const [salesPrice,SetSalesPrice] = useState('');
     const [productID,setProductID] = useState('');
-
 
     const handleSubmit = (e) => {
         setVisible(false)
@@ -161,9 +151,9 @@ const AddProduct = () => {
         if(CategoryOther) {
           itemCategory = newCat;
           itemType = newType; }
-        else {
+        else if(ItemTypeOther) {
           itemCategory = selectedCat;
-          itemType = selectedType; }
+          itemType = newType; }
           
 
         setTotalCost(purchaseCost * quantity);
@@ -179,7 +169,8 @@ const AddProduct = () => {
         console.log("New Cat: " , newCat);
         console.log("New Type: ", newType)
         Axios.post("http://localhost:8000/genId").then((res) => {
-          id = "PRD" + res.data.seq1;
+          let id = "PRD" + res.data.seq1;
+          console.log(id);
           if(rent == true && sales == true){
             Axios({
               method:"post",
@@ -237,6 +228,7 @@ const AddProduct = () => {
               }
             }).then((response)=>{
               showSuccess();
+
             })
           }
       
@@ -298,11 +290,9 @@ const AddProduct = () => {
                 <InputText   value={newCat} placeholder="New Category" onChange={(e)=>setNewCat(e.target.value)}  />
             </div>}
 
-
-           
-
-
-            
+           <div className="flex-1 p-inputgroup" id="catdiv">
+            <Dropdown value={selectedType}  options={typeList}  onChange={handleItemType} placeholder="Select a Type" className="dp"/>
+             </div>
 
              { ItemTypeOther && <div className="p-inputgroup flex-1">
              <span className="p-inputgroup-addon">
@@ -311,16 +301,12 @@ const AddProduct = () => {
                 <InputText value={newType} placeholder="New Item Type" onChange={(e)=>setNewType(e.target.value)} />
             </div>}
 
-           <div className="flex-1 p-inputgroup">
-            <Dropdown value={selectedType}  options={typeList}  onChange={handleItemType} placeholder="Select a Type" className="dp"/>
-             </div>
-
              {/* <div className="p-inputgroup flex-1">
              <span className="p-inputgroup-addon">
                     <i className="pi pi-hashtag"></i>
                 </span>
-                <InputText placeholder="Product ID" onInput={(e)=>setProductID(e.target.value)}/>
-            </div> */}
+                <InputText placeholder="Product ID" value={pid} onInput={(e)=>setProductID(e.target.value)}/>
+            </div>  */}
 
              <div className="p-inputgroup flex-1">
                 <span className="p-inputgroup-addon" style={{'color':'black'}}>₹</span>
@@ -378,54 +364,12 @@ const AddProduct = () => {
 
              <Dialog header="Product Details" visible={visible} style={{ width: '50vw' }} onHide={() => setVisible(false)} footer={footerContent}>
                 <div className="dialog-span">
-                    <span>Product ID: {id}</span>
+                    <span>Product ID: {productID}</span>
                     <span> Purchase Cost : {purchaseCost}</span> 
                     <span>Quantity : {quantity}</span> 
                     <span> Total Cost : { purchaseCost*quantity } </span>
                 </div>
             </Dialog> 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            <div className="card flex flex-column md:flex-row gap-3 bflex">
-                <div className="lform">
-                   
-                </div>
-                <div className="rform">
-                    
-                    
-
-                </div>
-            </div>
-
         </div>
 
         {/* <div className="card flex flex-wrap justify-content-center gap-3">
