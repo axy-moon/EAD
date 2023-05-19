@@ -26,6 +26,8 @@ import ImageUploader from "../../commonComponents/ImageUploader";
 import "primereact/resources/themes/tailwind-light/theme.css"; 
 import '../../css/product.css'
 import { type } from "@testing-library/user-event/dist/type";
+import { clear } from "@testing-library/user-event/dist/clear";
+import FormCheckLabel from "react-bootstrap/esm/FormCheckLabel";
 
 
 
@@ -35,8 +37,9 @@ const AddProduct = () => {
     const toast = useRef(null);
 
     const showSuccess = () => {
-        toast.current.show({severity:'success', summary: 'Success', detail:'Product Details Inserted Successfully', life: 2000});
-    }
+        toast.current.show({severity:'success', summary: 'Success', detail:'Product Details Added Successfully', life: 2000});
+        setVisible(false)
+      }
     const [selectedCat, setSelectedCat] = useState(null);
     const [newType,setNewType] = useState(null);
     const [newCat,setNewCat] = useState(null);
@@ -146,10 +149,10 @@ const AddProduct = () => {
     const [productID,setProductID] = useState('');
 
     const handleSubmit = (e) => {
-        setVisible(false)
+      e.preventDefault()
+      popup()
 
-       
-
+        
         var itemCategory;
         var itemType;
         if(CategoryOther) {
@@ -174,6 +177,7 @@ const AddProduct = () => {
         console.log("New Type: ", newType)
         Axios.post("http://localhost:8000/genId").then((res) => {
           let id = "PRD" + res.data.seq1;
+          setProductID(id)
           console.log(id);
           if(rent == true && sales == true){
             Axios({
@@ -181,7 +185,7 @@ const AddProduct = () => {
               url:"http://localhost:8000/addProduct",
               data:{
 
-                item_category: itemCategory,
+                item_category: selectedCat,
                 item_type: selectedType,
                 product_id:id,
                 purchase_cost: purchaseCost,
@@ -193,7 +197,6 @@ const AddProduct = () => {
                 sales_amt: salesPrice,
               }
             }).then((response)=>{
-              showSuccess();
             })
           }
           else if(rent == true && sales == false){
@@ -201,8 +204,8 @@ const AddProduct = () => {
               method:"post",
               url:"http://localhost:8000/addProduct",
               data:{
-                item_category: itemCategory,
-                item_type: itemType,
+                item_category: selectedCat,
+                item_type: selectedType,
                 product_id:id,
                 purchase_cost: purchaseCost,
                 notes: notes,
@@ -220,8 +223,8 @@ const AddProduct = () => {
               method:"post",
               url:"http://localhost:8000/addProduct",
               data:{
-                item_category: itemCategory,
-                item_type: itemType,
+                item_category: selectedCat,
+                item_type: selectedType,
                 product_id:id,
                 purchase_cost: purchaseCost,
                 notes: notes,
@@ -231,7 +234,6 @@ const AddProduct = () => {
                 sales_amt: salesPrice,
               }
             }).then((response)=>{
-              showSuccess();
 
             })
           }
@@ -243,19 +245,18 @@ const AddProduct = () => {
 
         
           
-    const popup =(e)=> {
-        e.preventDefault()
-
-        setVisible(true)
+    const popup =()=> {
+        
+        setVisible(true)  
     }
 
     const clearForm = () => {
         setSelectedCat(null);
         setSelectedType(null);
         setProductID('');
-        setPurchaseCost('');
-        setQuantity('');
-        setNotes('');
+        setPurchaseCost(null);
+        setQuantity(null);
+        setNotes(null);
         setDepositAmount('');
         SetSalesPrice('');
         setRent(false);
@@ -265,7 +266,7 @@ const AddProduct = () => {
     const footerContent = (
         <div>
             <Button label="No" icon="pi pi-times" onClick={() => setVisible(false)} className="p-button-text" />
-            <Button label="Yes" icon="pi pi-check" onClick={handleSubmit} autoFocus />
+            <Button label="Yes" icon="pi pi-check" onClick={showSuccess} autoFocus />
         </div>
     );
 
@@ -357,7 +358,7 @@ const AddProduct = () => {
 
                     <div className="fbtns">
                     <Button label="Cancel" severity="danger" raised icon="pi pi-times" onClick={clearForm} />
-                    <Button label="Add" raised severity="success" icon="pi pi-check" onClick={popup}  />
+                    <Button label="Add" raised severity="success" icon="pi pi-check" onClick={handleSubmit}  />
                     </div>
             
             </div>
