@@ -140,3 +140,30 @@ h1 {
 .sale-btns {
     width: 50%;
 }
+
+#apid {
+    color: #007bff;
+}
+
+.sl-grid {
+    display: grid;
+    grid-template-columns: 50% 50%;
+    width: 90%;
+    height: 360px;
+}
+
+.sleft , .sright {
+    margin: 30px;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #DDE6ED;
+
+}
+
+.sl-grid p {
+    padding: 28px;
+    text-align: justify;
+}

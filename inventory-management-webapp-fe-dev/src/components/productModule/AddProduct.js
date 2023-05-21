@@ -40,6 +40,9 @@ const AddProduct = () => {
         toast.current.show({severity:'success', summary: 'Success', detail:'Product Details Added Successfully', life: 2000});
         setVisible(false)
       }
+    const showFailure = () => {
+        toast.current.show({severity:'info', summary: 'Info', detail:'All the fields are required', life: 2000});
+      }
     const [selectedCat, setSelectedCat] = useState(null);
     const [newType,setNewType] = useState(null);
     const [newCat,setNewCat] = useState(null);
@@ -150,18 +153,27 @@ const AddProduct = () => {
 
     const handleSubmit = (e) => {
       e.preventDefault()
-      popup()
-
-        
         var itemCategory;
         var itemType;
+        
+        if(!(selectedCat && selectedType)) {
+            showFailure()
+            return
+        }
+
         if(CategoryOther) {
           itemCategory = newCat;
-          itemType = newType; }
+          itemType = newType; 
+        }
         else if(ItemTypeOther) {
           itemCategory = selectedCat;
-          itemType = newType; }
-          
+          itemType = newType;
+        }
+        else {
+          itemCategory = selectedCat;
+          itemType = selectedType;
+        }
+        
 
         setTotalCost(purchaseCost * quantity);
         console.log(selectedCat)
@@ -185,8 +197,8 @@ const AddProduct = () => {
               url:"http://localhost:8000/addProduct",
               data:{
 
-                item_category: selectedCat,
-                item_type: selectedType,
+                item_category: itemCategory,
+                item_type: itemType,
                 product_id:id,
                 purchase_cost: purchaseCost,
                 notes: notes,
@@ -204,8 +216,8 @@ const AddProduct = () => {
               method:"post",
               url:"http://localhost:8000/addProduct",
               data:{
-                item_category: selectedCat,
-                item_type: selectedType,
+                item_category: itemCategory,
+                item_type: itemType,
                 product_id:id,
                 purchase_cost: purchaseCost,
                 notes: notes,
@@ -223,8 +235,8 @@ const AddProduct = () => {
               method:"post",
               url:"http://localhost:8000/addProduct",
               data:{
-                item_category: selectedCat,
-                item_type: selectedType,
+                item_category: itemCategory,
+                item_type: itemType,
                 product_id:id,
                 purchase_cost: purchaseCost,
                 notes: notes,
@@ -234,7 +246,7 @@ const AddProduct = () => {
                 sales_amt: salesPrice,
               }
             }).then((response)=>{
-
+              popup()
             })
           }
       
@@ -246,7 +258,6 @@ const AddProduct = () => {
         
           
     const popup =()=> {
-        
         setVisible(true)  
     }
 
@@ -265,8 +276,7 @@ const AddProduct = () => {
 
     const footerContent = (
         <div>
-            <Button label="No" icon="pi pi-times" onClick={() => setVisible(false)} className="p-button-text" />
-            <Button label="Yes" icon="pi pi-check" onClick={showSuccess} autoFocus />
+            <Button label="OK" icon="pi pi-check" onClick={showSuccess} autoFocus />
         </div>
     );
 
@@ -343,12 +353,15 @@ const AddProduct = () => {
                     <div className="p-inputgroup flex-1">
                         <span className="p-inputgroup-addon">₹</span>
                         <InputText placeholder="Deposit Amount"  onInput={(e) => setDepositAmount(e.target.value)}  />
+                        <span className="p-inputgroup-addon">/unit</span>
+                    
                     </div>}
                     {sales && 
                     <div className="p-inputgroup flex-1">
                         <span className="p-inputgroup-addon">₹</span>
                         <InputText placeholder="Sales Price"  onInput={(e) => SetSalesPrice(e.target.value)} />
-                    </div> }
+                        <span className="p-inputgroup-addon">/unit</span>
+                    </div>                    }
                     <div className="flex-1" style={{'marginTop' : '30px'}}>
                     <span className="p-float-label">
                         <InputTextarea id="notes" onInput={(e) => setNotes(e.target.value)} rows={4} cols={35} />
@@ -369,7 +382,7 @@ const AddProduct = () => {
 
              <Dialog header="Product Details" visible={visible} style={{ width: '50vw' }} onHide={() => setVisible(false)} footer={footerContent}>
                 <div className="dialog-span">
-                    <span>Product ID: {productID}</span>
+                    <span id="apid">Product ID: {productID}</span>
                     <span> Purchase Cost : {purchaseCost}</span> 
                     <span>Quantity : {quantity}</span> 
                     <span> Total Cost : { purchaseCost*quantity } </span>

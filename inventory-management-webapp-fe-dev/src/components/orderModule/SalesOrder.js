@@ -243,12 +243,11 @@ const footerContent = (
         <Toast ref={toast} />
         
         <form>
-        <div className="ap-grid">
+        <div className="ap-grid" >
         <h1>PRODUCT DETAILS</h1>
 
         <div className="card flex flex-column md:flex-row top gap-3">
-
-            <div className="bsform">
+          <div className="bsform">
 
             <div className="flex-1 p-inputgroup">
                 <Dropdown value={selectedCat}  onChange={(e)=>setSelectedCat(e.target.value)} options={categoryList}
@@ -283,6 +282,7 @@ const footerContent = (
             </div>
 
             <br></br>
+            <div>
             <h1>CUSTOMER DETAILS</h1>
 
             <div className="p-inputgroup flex-1">
@@ -313,8 +313,8 @@ const footerContent = (
             <div className="image-up">
             {/* <ImageUploader/> */}
             </div>
-            </div>
-            
+          </div>
+        </div>
 
              <Dialog header="Product Details" visible={visible} style={{ width: '50vw' }} onHide={() => setVisible(false)} footer={footerContent}>
                 <div className="dialog-span">
